@@ -1,0 +1,24 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Office temp/lock files
+~$*
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Secrets
+.env
+.env.local
+
+# Editor
+.vscode/*.log
+
+# Agent outputs (transient working files — the whole folder is ignored;
+# move a file out to another folder to track it in git)
+agent-outputs/

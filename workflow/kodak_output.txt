@@ -1,0 +1,2546 @@
+Number of sheets: 12
+Sheet names: ['Context for agents', 'Filter Task', 'Scorer Task', 'Other Updates', 'output1', 'output3', 'output2', 'output4', 'Output7', 'output8', 'output9', 'output10']
+
+=== Sheet: Context for agents ===
+Shape: (5, 7)
+Columns: ['Context prompts', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6']
+
+--- Row 0 ---
+  Context prompts: Variable name
+  Unnamed: 1: company_description
+  Unnamed: 2: framework_description
+  Unnamed: 3: filter_role_description (doer/preparer)
+  Unnamed: 4: filter_reviewer_role_description (reviewer of doer's work)
+  Unnamed: 5: scorer_role_description 
+  Unnamed: 6: scorer_reviewer_role_description
+
+--- Row 1 ---
+  Context prompts: Where is it used?
+  Unnamed: 1: filter_agent_context
+scorer_agent_context
+filter_peer_review_agent_context
+scorer_peer_review_agent_context
+  Unnamed: 2: filter_agent_context
+scorer_agent_context
+filter_peer_review_agent_context
+scorer_peer_review_agent_context
+  Unnamed: 3: filter_agent_context
+  Unnamed: 4: filter_peer_review_agent_context
+  Unnamed: 5: scorer_agent_context
+  Unnamed: 6: scorer_peer_review_agent_context
+
+--- Row 2 ---
+  Context prompts: FROM
+  Unnamed: 1: You work at a consulting company that helps businesses understand how to improve their operational efficiency. 
+The team you work for specializes in evaluating the organizational maturity of a business's {topic} department.
+When a client asks you to complete a maturity assessment of their {topic} department you start by interviewing people within their business. 
+You do this to better understand how a client's {topic} department operates. 
+After summarizing these interviews, your team needs to determine what information should be used to score the {topic} department against a maturity assessment framework.
+ Once all relevant information has been extracted from the interview summaries, your team then scores the client's {topic} department against maturity assessment criteria.
+  Unnamed: 2: A maturity assessment framework evaluates an organization's operational efficiency for {topic} department.
+The framework has different grandularities, Lv1 > Lv2 > Lv3 where Lv1 is the least granular and Lv3 is the most granular. 
+You need to identify whether the interview content is relevant and whether pain point is presented for each Lv3 area and give a score for each Lv3 area.
+  Unnamed: 3: Your role is to select all relevant quotes for the current pain point and suggest additional pain point if necessary.
+
+There are several aspects to focus on:
+(1) ensure that the selected quotes do not include irrelevant information at all Lv1, Lv2, Lv3, pain point levels. AND
+(2) ensure that all relevant quotes for each pain point are included where?. If there are more than 1 quote supporting the pain point, they should all be included to ensure completeness. AND
+(3) ensure the additional pain point cannot be linked to existing pain points. If the additional pain point can be linked to an existing one, you should group the quote into the that. AND
+(4) if a quote supports other pain points, it should not be used to support existence of the "additional" pain point.
+
+When giving feedback, be specific about how your colleague can improve their response and what information they should re-assess. 
+  Unnamed: 4: There are several aspects to focus on when reviewing your colleague's work. 
+(1) ensure that they have not included irrelevant information for the selected criteria. AND
+(2) ensure that all relevant quotes for each pain point are included. If there are more than 1 quote supporting the pain point, they should all be included to ensure completeness. AND
+(3) ensure the additional pain point cannot be linked to existing pain points. If the additional pain point can be linked to an existing one, ask your colleague to revise. AND
+(4) if a quote supports other pain points, it should not be used to support existence of the "additional" pain point.
+When giving feedback, be specific about how your colleague can improve their response and what information they should re-assess. 
+ """
+  Unnamed: 5: Your task is to use relevant information from interview summaries to score a {topic} department using maturity assessment framework criteria. 
+Rememeber that you do not just take the average score from invidual context, but to evaluate the company against the framework broadly.
+
+To do this, you should review each score description of the criterion.
+ Then you should compare the relevant information you are given with the score descriptions and determine what score description the {topic} department should receive. 
+
+ Your response should include a final rating: Red, Amber, or Green, a justification that explains why the {topic} department received this score, 
+a comment on how confident you are in your assessment, and what additional information you would require to do a better job.
+"""
+  Unnamed: 6: You are responsible for reviewing a colleague's work. Your colleague's job is to use the relevant information from interview summaries to score a {topic} department against specific maturity assessment criteria. 
+
+If your colleague is unsure of what to do, they will ask you a question. If they do so, make sure to provide a clear response that addresses their confusion.
+
+If your colleague provides you with a score and justification, then you should review their work and provide feedback. When reviewing your colleague's work make sure that they have correctly linked the information they were given with a score description, and check that they have applied maturity assessment criteria correctly. 
+
+Additionally, try to identify if there is a better justification than what your colleague has given and provide suggestions on how they can improve the accuracy of their evaluation using your insights.
+
+When giving feedback, be specific about how your coworker can improve their answer and what they should focus on.
+
+--- Row 3 ---
+  Context prompts: TO
+  Unnamed: 1: You work at a consulting company that helps businesses understand how to improve their operational efficiency. The team you work for specializes in evaluating the current state of a business's {topic} department.
+When a client asks us to complete a current state assessment of their {topic} department, we start by interviewing people within their business. We do this to better understand how a client's {topic} department operates. 
+Then the team must determine the information that should be used to score the {topic} department against the current state assessment framework.
+Once all relevant information has been extracted from the interview transcript, the team then scores the client's {topic} department against the current state assessment criteria.
+  Unnamed: 2: The current state assessment framework evaluates an organization's operational efficiency for {topic} department.
+The framework has different granularities, Lv1 > Lv2 > Lv3, where Lv1 is the least granular and Lv3 is the most granular.
+The current state assessment is performed by identifying whether the interview content contains expected pain points for each Lv3 area and then scoring each Lv3 area accordingly.
+  Unnamed: 3: Your role is to identify and extract quotes from interview documentation that are relevant to the selected Lv 2 and L3 framework areas (but every client has different issues so some pain points might not be present) and to identify 'additional' pain points for the client that are relevant to Lv2. Then align them to the framework pain points to identify what is present, absent and/or 'additional'.
+  Unnamed: 4: You are responsible for reviewing a colleague's work. Your colleague's job is to identify and extract quotes that are relevant to the expected list of pain points for the {criterion_name} area and to identify additional pain points for the client (but every client has different issues so some pain points might not be present).
+
+Your goals:
+(1) ensure the extracted quotes meet the pain point definition: an expressed issue with a clearly expressed link to what it impacts
+(2) accept 'additional' pain points as valid inclusions
+(3) ensure the extracted quotes are relevant to Lv2 and the respective Lv3 framework level descriptions (please note 'additional' pain points must only relate to Lv2)
+(4) if there are multiple quotes supporting one pain point, include them all to ensure completeness
+
+When providing feedback, be specific about how your colleague can improve their response and the information they should reassess.
+  Unnamed: 5: Your task is to use relevant information from interview documentation to score a {topic} department using the current state assessment framework. You will be tasked with providing a final rating at Lv2 and Lv3, as well as at the individual pain point level.
+ 
+To do this, you must:
+(1) review the framework details for the area selected (respective level descriptions and expected pain points)
+(2) compare the relevant information you are given to the framework details to identify present, absent and 'addtional' pain points, which will enable you to determine the score the {topic} department should receive based on the Scoring Criteria, Pain Point Scoring Rules and RAG Score Logic
+  Unnamed: 6: You are responsible for reviewing a colleague's work. Your colleague's job is to use the relevant information from interview transcripts to score a {topic} department against specific current state assessment framework criteria.
+
+Your goals are to:
+(1) review your colleague's work and provide feedback specifically related to points 2 to 7 below
+(2) ensure the Scoring Criteria and Pain Point Scoring Rules have been followed sensibly
+(3) ensure RAG Score Logic has been followed
+(4) ensure results are provided in the format of the three requested tables
+(5) try to identify if there is a better justification than what your colleague has given and provide suggestions on how they can improve the accuracy of their evaluation using your insights
+(6) when reviewing your colleague's work:
+(i) validate that the quotes allocated to framework pain points logically correlate to each other
+(ii) accept 'additional' pain points as valid inclusions
+(7) 'Uplift Opportunities' must be deleted for pain points **not experienced/observed by the client**
+
+When providing feedback, be specific about how your colleague can improve their response and the information they should reassess.
+
+--- Row 4 ---
+  Context prompts: Comments
+  Unnamed: 1: -This info goes to each agent, therefore it should not contain instructions for all agents to avoid contradictory instructions
+-To provide the full context but subtract the conflicting information, I change instances of "you" to "we" after the first paragraph to provide the overview of the end-to-end process
+  Unnamed: 2: -This info goes to each agent, therefore it should not contain instructions for all agents to avoid contradictory instructions
+-To provide the full context but subtract the conflicting information, I change instances of "you" to be in the third person to provide the overview of the end-to-end process
+  Unnamed: 3: -First sentence implies there will always be quotes for every pain point, which can lead to hallucination
+-Comment on additional pain point lacks context for what 'additional' means
+-Use double asterixis for important information - only when you want to ensure the LLM does not miss a detail
+-Typically, it's better to phrase things in direct active language and positively rather than negatively - this also reduces token counts
+-You don't need "AND" if you provide a clear instruction for the dot points
+-By giving clearer contextual instructions about the purpose of an 'additional' pain point, you can reduce the instructions for it
+-Last sentence is for the reviewer agent, not the prepare agent, so it has been deleted
+  Unnamed: 4: Previous:
+(2) ensure pain points marked as 'additional' **do not** relate to any of the framework pain points
+  Unnamed: 5: -Changed "summaries" to "transcript" for clarity
+-Red sentence is redundant with clearer instructions below
+-"you should review each score description of the criterion" doesn't refer to scoring criteria, it refers to the Lv3 areas and their pain points for the Lv2 area selected
+-Asked Copilot what the score descriptions of the criterion are - need this context to avoid the LLM guessing, which would lead to variation in results
+-There are two sets of scoring labels so these must be explained and differentiated, but I think it should be at task level now, not at agent level
+  Unnamed: 6: Previous:
+[6](ii) for 'additional' pain points, validate that each one is unique to those articulated in the Client- Specific Expression column (if it isn't, remove it as an 'additional' pain point)
+
+====================================================================================================
+
+=== Sheet: Filter Task ===
+Shape: (5, 4)
+Columns: ['Context prompts', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3']
+
+--- Row 0 ---
+  Context prompts: Variable name
+  Unnamed: 1: input_data
+  Unnamed: 2: filter_requirement 
+  Unnamed: 3: output_requirement
+
+--- Row 1 ---
+  Context prompts: Where is it used?
+  Unnamed: 1: filter_task 
+  Unnamed: 2: filter_task 
+  Unnamed: 3: filter_task 
+
+--- Row 2 ---
+  Context prompts: FROM
+  Unnamed: 1: fContext: A client has asked that your firm conduct a maturity assessment for their {topic} department. " 
+        f"Your company has conducted interviews with the department's employees and people that they interact with. " 
+        f"The {topic} department is being scored against a {criterion_name} criteria. " 
+        f"The {criterion_name} criteria and scoring descriptions are shown below:\n\n{get_fa_maturity_description_score(criteria,criterion_name)}\n\n" 
+        f"Below is a summary of the interviews that were conducted:"
+        f"\n\n{processed_data}\n\n")
+  Unnamed: 2: Examine them and determine what information is relevant to scoring the {topic} department against the {criterion_name} area.
+        Work with your colleague to filter the relevant interviews and review each other's work. Use the following structure if you are filtering interviews or refining the output. 
+        Each line in the original interview is seperated by "\n". Do not summarise the quote, you should use the original quote. Do not hallucinate interview data.
+
+        Task: Your task is to use the predefined list of pain points and align them with the client's situation by evaluating their presence and their impact.
+        You need to select all relevant quotes for the current pain point and suggest additional pain point if necessary.
+
+       Requirments:
+        (1) the selected quotes do not include irrelevant information at all Lv1, Lv2, Lv3, pain point levels. AND
+        (2) you must select ALL quotes that are relevant to ensure completeness. AND
+        (3) If there are additional pain points, you need to include that in the table and postfix the pain point number column with "(*additional pain point)". All originally listed pain points should have a string of integer in the Pain Point Number field.
+        Important requirements for including additional pain points are:
+            (a) there is a quote that suggests a client pain point that falls under the Lv1, Lv2, and Lv3 area description but 
+            (b) cannot be linked to any existing pain points. Remember you should group the quote to existing pain point if you can. 
+            (c) if a quote supports other pain points, it should not be used to support "additional" pain point. 
+
+        (4) If the pain point is observed, be sure to outline a potential solution in the "uplift opportunity" field. If not, leave it blank.
+    """)
+  Unnamed: 3: Your output should be in this format:
+
+        ```
+        Overall Summary:
+
+        Detailed Evaluation Table:
+        | Lv3 Name | Lv3 Description| Pain Point Number |Pain Point | Observed (Y/N)| Client-Specific Epxression | Interview Quotes | Uplift Opportunity|
+        ```
+        
+        If the pain point is not observed, put N/A in relevant fields.l
+        If the pain point is observed, You should include ALL quotes that support the presence of it.
+        (2) You should include ALL origial pain points even if they are not identified in the client interview.
+        (3) In the Client-Specific Expression column, you need to combine both general pain point and client quotes into a single, client-specific pain point that sounds polished and relevant, and is specific to the client's industry, operations, or jargon
+        Use the provided client context to guide your phrasing. The goal is to make each pain point feel familiar and relevant to the client. Avoid generic phrasing and priroritise resonance within their domain.
+        "Interview Quotes" should be a list of string:  ["xxx","yyy"]
+        "Lv3 Description" must match the original description provided in the framework.
+        """
+
+--- Row 3 ---
+  Context prompts: TO
+  Unnamed: 1: fContext: A client has asked that your firm conduct a current state assessment for their {topic} department. " 
+        f"Your company has conducted interviews with the department's employees and the people they interact with. " 
+        f"The {topic} department is being scored against the following {criterion_name} framework details:\n\n{get_fa_maturity_description_score(criteria,criterion_name)}\n\n" 
+        f"Below is the client interview documentation:"
+        f"\n\n{processed_data}\n\n")
+  Unnamed: 2: The task is to examine client interview documentation to identify and extract quotes about pain points that are relevant to scoring the {topic} department against the {criterion_name} framework area. 
+        Work with your colleague to filter the relevant information and review each other's work. **Please do not summarise or paraphrase extracted interview quotes in any way.**
+        Next, please align the client's pain points to the expected list of framework pain points to identify which ones are present, absent and/or 'additional'.
+        Please ensure each line in the original interview is separated by ""\n"".
+        
+Quote and Pain Point Requirements:
+(1) Pain point definition: a statement of an issue with a clearly expressed link to what it impacts that relates to the {criterion_name} area.
+(2) the extracted quotes must be relevant to Lv1, Lv2 and Lv3 pain point levels for the specified area
+(3) if there are multiple quotes supporting a pain point, include them all to ensure completeness and add a single line break between them
+(4) if you identify a quote about a pain point that **is not** related to the expected framework pain points, then include it in the Detailed Evaluation Table and print 'Additional #' for the first 4 columns
+(5) all listed pain points must have a string of integer in the Pain Point Number field.
+(6) only pain points with Interview Quotes must have a potential solution in the 'Uplift Opportunity' field
+
+----
+Previous:
+(6) for each framework pain point with a supporting quote, please outline a potential solution in the 'Uplift Opportunity' field. If the pain point has no supporting quotes, leave it blank.
+  Unnamed: 3: Your output must be a report with a Summary and one table in the below format. The writing tone must be professional as this information will be in the final client report. Please **do not** include niceties in your response - just provide the Overall Summary and the Detailed Evaluation Table.
+```
+Overall Summary:
+
+Detailed Evaluation Table:
+Lv3 Name|Lv3 Description|Pain Point Number|Framework Pain Point|Observed (Y/N)|Client-Specific Expression|Interview Quote|Uplift Opportunity|
+```
+Table field rules:
+(1) Please list each pain point in the framework in the table for the respective area, and use the framework labels and descriptions for 'Lv3 Name' and 'Lv3 Description'
+(2) If a pain point has not been observed for the client, input N/A for all fields after 'Observed (Y/N)'
+(3) If a pain point is observed, you must include ALL quotes that support the presence of it.
+(4) For 'additional' pain points, print 'Additional #' in the first 4 columns for the pain point
+(5) In the Client-Specific Expression column, **for observed framework pain points only,** you must combine both the framework description for the pain point and the associated quotes from the client into a single polished statement that is relevant specific to the client's industry, operations and/or jargon. Use the provided client context to guide your phrasing. If not observed, leave it blank.
+(6)'Interview Quotes' must be a list of string:  ["xxx","yyy"]
+
+Please take a deep breath and work on this problem step-by-step. This is very important to my career. 
+
+--- Row 4 ---
+  Context prompts: Explanation for changes
+  Unnamed: 1: -"Scoring descriptions" content is actually the Lv3 info belonging to the Lv2 area selected
+-If you tell an LLM you will give it something different to what you actually provide, it could add extra chatter about this in the response
+  Unnamed: 2: If the SMEs disagree with the results of the filtering agents, then it will likely track back to my 'pain point definition' in #1.
+
+I added this clarification to avoid a pain point expressed about one Lv3 area being allocated to unrelated areas out of context. In the transcript, the interviewee says 5.10 is working well and then moved onto 5.11.
+
+====================================================================================================
+
+=== Sheet: Scorer Task ===
+Shape: (5, 6)
+Columns: ['Context prompts', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5']
+
+--- Row 0 ---
+  Context prompts: Variable name
+  Unnamed: 1: scorer_data
+  Unnamed: 2: impact_assessment
+  Unnamed: 3: aggregate_to_lv3
+  Unnamed: 4: aggregate_to_lv2
+  Unnamed: 5: output_requirement
+
+--- Row 1 ---
+  Context prompts: Where is it used?
+  Unnamed: 1: scorer_task
+  Unnamed: 2: scorer_task
+  Unnamed: 3: scorer_task
+  Unnamed: 4: scorer_task
+  Unnamed: 5: scorer_task
+
+--- Row 2 ---
+  Context prompts: FROM
+  Unnamed: 1: f"A {topic} department has asked for a maturity assessment. The company is being scored against a criterion about {criterion_name} criteria. " 
+                    f"Your colleague has identify the presence of each pain point and supporting quote. You need to score the Lv3 area based on this information:"
+                    f"```{relevant_information}```"
+  Unnamed: 2: metrics to assess the significance of each pain point is as follows:
+            (a) Relevance: amber: Important but not central process; red: Core process;
+            (b) Urgency and severity: amber: inefficient but manageable (manual workarounds exist); red: causes disruption (delays, errors, difficult process);
+            (c) Frequency: amber: occasional; red: persistence
+            (d) Opportunity: amber: medium opportunity - adds value but not essential to business priorities; red: high opportunity: clear solutions exist. Significant effect on cost savings, error reduction, or performance uplift. strongly aligns with transformation goals.
+    
+    The overall score at pain point level is derived from the most occured score.
+    
+            At the pain point level the scoring rule is:
+            1. For each unique pain point, calculate the average impact score across all client examples and all dimensions (relevancy, urgency, frequency and opportunity)
+
+            ** Maturity Assessment Score for {criterion_name} criteria**:
+
+            output table at pain point level should have these fields:
+    Lv3 name: use the original name (with index)
+    L3 Description: use the original description without reformatting.
+    Pain Points: this is client-specific expression of pain point. 
+    RAG Score (L3): Red, Amber, or Green 
+    RAG Score calculation: how this is calculated
+
+    writting tone: professional as it needs to be in the final client report.
+  Unnamed: 3:   Next, for each Lv3 areas, derive a single RAG score.
+    For each Level 3 area, if there is no pain point, the RAG score is automatically a green. If there are pain points, use the score with the highest occurance of the underlying pain point score
+    as the final Lv3 score: 
+
+    Final score at Lv3 should have the following fields:
+
+    Lv3 name : same requirement as before
+    L3 Description: same requirement as before
+    Pain Points: this is a list of client-specific expression of all observed pain point. 
+    RAG Score (L3) 
+    RAG Score calculation
+  Unnamed: 4:         Next, for each Lv2 areas, derive a single RAG score.
+    If all scores at Lv3 are green, the RAG score is automatically a green. Otherwise use the highest score. The order is red > amber > green.
+    as the final Lv2 score:
+
+
+    Final score at Lv2 should have the following fields:
+
+    Lv2 name: same requirement as before
+    Key Pain Points: this should be a summary of each L3 client-specific pain points. 
+    RAG Score (L2) 
+    RAG Score calculation
+    """
+    )
+
+  Unnamed: 5:         """Your output must be a report in the following format:
+        
+            Final score at pain point level: 
+            | Lv3 name | Pain Points | RAG score |RAG Score calculation|
+
+            Final score at Lv3:
+            |Lv3 name |Lv3 Description| Pain Points |RAG Score (L3) |RAG Score calculation| Uplift Opporutnity |
+
+            Final score at Lv2:
+            |Lv2 name| Key Pain Points | RAG Score (L2) |RAG Score calculation| Key Uplift Opporutnity|
+        
+        """
+
+--- Row 3 ---
+  Context prompts: TO
+  Unnamed: 1: f"A {topic} department has asked for a current state assessment. The client is being scored against {criterion_name} framework details and wants the information presented back to them in table format. "
+                    f"Your colleague has identified the presence of the below pain points from the supporting quotes. You task is to score the Lv3 area based on this information:"
+                    f"```{relevant_information}```"
+  Unnamed: 2: Scoring Criteria:
+Metrics to assess the significance of each pain point **that has been observed**:
+            (a) Relevance: Medium: Important but not central process; High: Core process
+            (b) Urgency and severity: Medium: Inefficient but manageable with manual workarounds readily available to maintain operations. High: Causes significant disruption such as delays, errors, or a noticeably difficult process where manual workarounds are insufficient or impractical.
+            (c) Frequency: Medium: occasional. High: persistent
+            (d) Opportunity: Medium: adds value but not essential to business priorities. High: clear solution exists and/or significant effect on cost savings, error reduction, or performance uplift and/or strongly aligns with transformation goals.
+    
+Pain Point Scoring Rules for the 'Final Score at Pain Point Level' table:
+1.To score each pain point, calculate the average impact score across all dimensions (relevancy, urgency, frequency and opportunity) for all **Observed: Y** client pain points
+2.The overall score for a pain point must equal the score that occurred the most (Medium / High) across the Scoring Criteria (Relevance, Urgency etc)
+3.If a pain point was not observed (Observed: N), then input N/A as the overall score 
+
+You must display the results in the 'Final Score at Pain Point Level' table.
+  Unnamed: 3: Next, for each Lv3 area, roll up the pain point scores to derive a single Maturity Assessment Score ('RAG Score').
+
+RAG Score Logic:
+1.If all pain point scores are N/A (no observed pain points in the area), the Lv3 RAG score must be 'No Challenges'
+2.If all pain point scores are 'Medium', then the Lv3 RAG score must be 'Some Challenges'
+3.If all pain point scores are 'High', then the Lv3 RAG score must be 'Significant Challanges'
+4.If 'N/A' and/or 'Medium' and 'High' RAG Scores are present across the pain points, then  the Lv3 RAG score must be 'Significant Challanges'
+
+You must display the result in the 'Final Score at Lv3' table.
+  Unnamed: 4: Then, for each Lv2 area, roll up the Lv3 scores to derive a single Maturity Assessment Score ('RAG Score').
+
+Please follow the same RAG Score Logic, but adjust for Lv3 scores rolled up to a Lv2 score.
+
+You must display the result in the 'Final Score at Lv2' table.
+  Unnamed: 5: Your output must be in three tables, which must include the specified information below. 
+The writing tone must be professional as this information will be in the final client report. 
+Please **do not** include niceties or repeat analysis in your response - just provide the specified information in the three tables.
+```
+Final Score at Pain Point Level:
+Lv3 Name|Key Pain Point|RAG Score|RAG Score Reason|Uplift Opportunity|
+
+Final Score at Lv3:
+Lv3 Name|Lv3 Description|Key Pain Points|RAG Score (L3)|RAG Score Reason|Uplift Opportunity|Confidence|
+
+Final Score at Lv2:
+|Lv2 Name|Key Pain Points|RAG Score (L2)|RAG Score Reason|Key Uplift Opportunity|Rationale|Confidence|Additional Information|
+```
+'Final Score at Pain Point Level' table details:
+    Lv3 Name: use the framework labels (with index)
+    L3 Description: use the framework descriptions without reformatting them
+    Key Pain Point: formulate client-specific expressions of pain points
+    RAG Score: High, Medium, Low
+    RAG Score Reason: explain the significance of the Pain Points for the {topic} department - use at most 1 sentence
+    Uplift Opportunity: from relevant information
+
+'Final Score at Lv3' table  details:
+    Lv3 Name
+    L3 Description
+    Key Pain Points: intelligently combine Key Pain Points into a coherent statement - use at most 2 sentences
+    RAG Score: No Challenges, Some Challenges, Significant Challenges
+    RAG Score Reason: explain the significance of the Pain Points for the {topic} department - use at most 1 sentence
+    Uplift Opportunity
+    Confidence: how confident are you in your RAG Score assessment, based on the clear linkage between quotes provided AND their alignment to the framework **excluding** 'additional' pain points and pain points not observed? Use at most 1 word: 'High', 'Medium' or 'Low'.
+
+'Final Score at Lv2' table details:
+    Lv2 Name
+    Key Pain Points:  intelligently combine Lv 3 Key Pain Points and Rag Score Reasons - use at most 2 paragraphs
+    RAG Score: No Challenges, Some Challenges, Significant Challenges
+    RAG Score Reason
+    Uplift Opportunity
+    Confidence
+    Additional Information: based on 'Confidence' defnition above, do you have what you need to be confident in your scoring assessments?
+
+Please take your time. This is very important to my career.
+
+--- Row 4 ---
+  Context prompts: Explanation for changes
+  Unnamed: 5: Previously:
+
+Your output must be in three tables, which must include the specified information below. 
+        The writing tone must be professional as this information will be in the final client report. 
+        Please **do not** include niceties or repeat analysis in your response - just provide the specified information in the three tables.
+        ```
+        Final Score at Pain Point Level:
+        Lv3 Name|Client Pain Point|RAG Score|RAG Score Reason|Uplift Opportunity|
+
+        Final Score at Lv3:
+        Lv3 Name|Lv3 Description|Client Pain Point|RAG Score (L3)|RAG Score Reason|Uplift Opportunity|Confidence|
+
+        Final Score at Lv2:
+        |Lv2 Name|Key Pain Points|RAG Score (L2)|RAG Score Reason|Key Uplift Opportunity|Rationale|Confidence|Additional Information|
+        ```
+        'Final Score at Pain Point Level' table details:
+            Lv3 Name: use the framework labels (with index)
+            L3 Description: use the framework descriptions without reformatting them
+            Client Pain Point: formulate client-specific expressions of pain points
+            RAG Score: High, Medium, Low
+            RAG Score Reason: explain the significance of the Pain Points for the {topic} department - use at most 1 sentence
+            Uplift Opportunity: from relevant information
+
+        'Final Score at Lv3' table  details:
+            Lv3 Name
+            L3 Description
+            Client Pain Points
+            RAG Score: No Challenges, Some Challenges, Significant Challenges
+            RAG Score Reason
+            Uplift Opportunity
+            Confidence: how confident are you in your RAG Score assessment, based on the clear linkage between quotes provided AND their alignment to the framework **excluding** 'additional' pain points and pain points not observed? Use at most 1 word: 'High', 'Medium' or 'Low'.
+
+        'Final Score at Lv2' table details:
+            Lv2 Name
+            Client Pain Points: summarise all Lv3 client-specific pain points
+            RAG Score: No Challenges, Some Challenges, Significant Challenges
+            RAG Score Reason
+            Uplift Opportunity
+            Confidence
+            Additional Information: if relevant, what you require to improve your confidence in your assessment
+
+        This is very important to my career.
+
+====================================================================================================
+
+=== Sheet: Other Updates ===
+Shape: (5, 6)
+Columns: ['Context prompts', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5']
+
+--- Row 0 ---
+  Context prompts: Variable name
+  Unnamed: 1: score_responses
+  Unnamed: 2: async def run_multi_agent_system
+  Unnamed: 3: def get_fa_maturity_description_score
+  Unnamed: 4: summary_prompt
+  Unnamed: 5: summary_prompt
+
+--- Row 1 ---
+  Context prompts: Where is it used?
+  Unnamed: 1: async def score_responses
+  Unnamed: 2: async def run_multi_agent_system
+  Unnamed: 4: async def format_filter_output
+  Unnamed: 5: async def format_score_output
+
+--- Row 2 ---
+  Context prompts: FROM
+  Unnamed: 1: Uses the relevant information from interview summaries to score to a human resources department against a WHRA framework.
+
+    Args:
+        criterion_name (str): name of the criterion.
+        relevant_information (str): data to be used to score a human resources department.
+
+    Returns
+        A list of scoring output.
+  Unnamed: 2:  Uses a sequence of isolated nested chats to conduct a WHRA maturity assessment. 
+
+    Args:
+        criterion_name (str): the name of the criterion to be assessed against.
+        processed_data (str): the data collected to evaluate the human resources department against. 
+        output_folder (Path): folder path to store results in.
+        file_name (str): name of the JSON file that will store the front end outputs.
+
+    Returns:
+        None
+  Unnamed: 3:     a = f"The maturity assessment is for Lv1 area: <05.00 Source to Play> and Lv2 area: <{level_2}>. \nThere are {no_l3s} Lv3 areas, which are: {';'.join(level_3_name)}. \nEach Lv3 area has a description and a few pain points. \n{'-'*40} \n"
+  Unnamed: 4: """Always format your output as a JSON.
+    
+        Here is the JSON structure to follow, ensure that Level 1 fields exactly match the content below:
+        {"Level 1": {
+        "ID": "1",
+        "Name": "Source to Pay",
+        "Description": "About sourcing payments",
+        "Level 2": [
+            {
+                "ID": "2.1",
+                "Name": "Setup Customer Master Data & Credit",
+                "Description": "How to procure",
+                "Key Pain Points":["xxx","yyy],
+                "Level 3": [
+                    {
+                        "ID": "2.1.3",
+                        "Name": "Setup Customer Financial Master Data",
+                        "Description": "This process confirms the nee to setup a new customer XXX",
+                        "Pain Points": [
+                        "Pain Points ID": "1",
+                        "Pain Points Name": "xxx",
+                        "Observed (Y/N)": "Y",
+                        "Client-Specific Expression": "",
+                        "Interview Quotes": [""],
+                        "Uplift Opportunity":[""]
+                        ]
+                    }
+                ]
+            },
+                      """
+  Unnamed: 5: """Always format your output as a JSON.
+    
+        Here is the JSON structure to follow, ensure that Level 1 fields exactly match the content below:
+        {"Level 1": {
+        "ID": "1",
+        "Name": "Source to Pay",
+        "Description": "About sourcing payments",
+        "Level 2": [
+            {
+                "ID": "2.1",
+                "Name": "Setup Customer Master Data & Credit",
+                "Description": "How to procure",
+                "Key Pain Points":["xxx","yyy],
+                "Level 3": [
+                    {
+                        "ID": "2.1.3",
+                        "Name": "Setup Customer Financial Master Data",
+                        "Description": "This process confirms the nee to setup a new customer XXX",
+                        "Pain Points": [
+                        "Pain Points ID": "1",
+                        "Pain Points Name": "xxx",
+                        "Observed (Y/N)": "Y",
+                        "Client-Specific Expression": "",
+                        "Interview Quotes": [""],
+                        "Uplift Opportunity":[""]
+                        ]
+                    }
+                ]
+            },
+                      """
+
+--- Row 3 ---
+  Context prompts: TO
+  Unnamed: 1: Uses the relevant information from interview documentation to score to a {topic} department against a current state assessment framework.
+
+    Args:
+        criterion_name (str): name of the criterion.
+        relevant_information (str): data to be used to score a {topic} department.
+
+    Returns
+        A list of scoring output.
+  Unnamed: 2:  Uses a sequence of isolated nested chats to conduct a current state assessment. 
+
+    Args:
+        criterion_name (str): the name of the criterion to be assessed against.
+        processed_data (str): the data collected to evaluate the {topic} department against. 
+        output_folder (Path): folder path to store results in.
+        file_name (str): name of the JSON file that will store the front end outputs.
+
+    Returns:
+        None
+  Unnamed: 3:     a = f"The current state assessment is for Lv1 area: <05.00 Source to Play> and Lv2 area: <{level_2}>. \nThere are {no_l3s} Lv3 areas, which are: {';'.join(level_3_name)}. \nEach Lv3 area has a description and a few pain points. \n{'-'*40} \n"
+  Unnamed: 4: To do
+  Unnamed: 5: To do
+
+--- Row 4 ---
+  Context prompts: Explanation for changes
+
+====================================================================================================
+
+=== Sheet: output1 ===
+Shape: (29, 8)
+Columns: ['Filterer agents output', 'Unnamed: 1', 'Unnamed: 2', 'Framework Pain Point', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7']
+
+--- Row 0 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Point Number
+  Framework Pain Point: Pain Point
+  Unnamed: 4: Observed (Y/N)
+  Unnamed: 5: Client-Specific Expression
+  Unnamed: 6: Interview Quotes
+  Unnamed: 7: Uplift Opportunity
+
+--- Row 1 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: 1
+  Framework Pain Point: There is currently no supplier self-service portal
+  Unnamed: 4: N
+  Unnamed: 5: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management.
+  Unnamed: 7: Implement a supplier self-service portal to streamline supplier interactions and data management.
+
+--- Row 2 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Framework Pain Point: There is limited capability to enable buyers to address their own inquiries through self-service
+  Unnamed: 4: Y
+  Unnamed: 5: Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries.
+  Unnamed: 6: [ "You know, if a buyer has any issues that they really find it difficult to understand who they can reach out to, to progress a procurement request." ]
+  Unnamed: 7: Enhance self-service functionalities to empower buyers to manage requisition inquiries independently.
+
+--- Row 3 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Framework Pain Point: There are system constraints that prevent efficient resolution of Purchase Order inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle.
+  Unnamed: 6: [ "The three systems you know will dive into what's working, what's not, but one of the issues that we have is that they don't really talk to each other." ]
+  Unnamed: 7: Improve system integration to facilitate seamless purchase order inquiry resolution.
+
+--- Row 4 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 2
+  Framework Pain Point: There is limited capability to enable buyers to address their own inquiries into Purchase Orders through self-service
+  Unnamed: 4: Y
+  Unnamed: 5: Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency.
+  Unnamed: 6: [ "The workflows don't really work that well and the is a result the user experience is a bit suboptimal." ]
+  Unnamed: 7: Develop self-service functionalities to allow buyers to efficiently manage purchase order inquiries.
+
+--- Row 5 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 3
+  Framework Pain Point: When Purchase Order inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries.
+  Unnamed: 6: [ "So things just get blocked in the, you know the sausage machine basically of supply and boarding." ]
+  Unnamed: 7: Establish a robust process and system support for central purchasing teams to manage purchase order inquiries effectively.
+
+--- Row 6 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: 1
+  Framework Pain Point: Where payments are made from across multiple systems, it can be difficult to efficiently resolve payment inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 6: [ "And then for us to actually make the payment 'cause remember the the invoices and the POS flow from Uni Market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Unnamed: 7: Streamline payment processes by integrating systems to reduce manual data handling and improve inquiry resolution efficiency.
+
+--- Row 7 ---
+
+--- Row 8 ---
+  Filterer agents output: Final Score at Pain Point Level
+
+--- Row 9 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Pain Points
+  Unnamed: 2: RAG Score
+  Framework Pain Point: RAG Score Calculation
+  Unnamed: 4: Uplift Opportunity
+
+--- Row 10 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management.
+  Unnamed: 2: Low
+  Framework Pain Point: No observed pain point.
+  Unnamed: 4: Implement a supplier self-service portal to streamline supplier interactions and data management.
+
+--- Row 11 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries.
+  Unnamed: 2: High
+  Framework Pain Point: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Enhance self-service functionalities to empower buyers to manage requisition inquiries independently.
+
+--- Row 12 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle.
+  Unnamed: 2: High
+  Framework Pain Point: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Improve system integration to facilitate seamless purchase order inquiry resolution.
+
+--- Row 13 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency.
+  Unnamed: 2: High
+  Framework Pain Point: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Develop self-service functionalities to allow buyers to efficiently manage purchase order inquiries.
+
+--- Row 14 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries.
+  Unnamed: 2: High
+  Framework Pain Point: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Establish a robust process and system support for central purchasing teams to manage purchase order inquiries effectively.
+
+--- Row 15 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 2: High
+  Framework Pain Point: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Streamline payment processes by integrating systems to reduce manual data handling and improve inquiry resolution efficiency.
+
+--- Row 16 ---
+
+--- Row 17 ---
+
+--- Row 18 ---
+  Filterer agents output: Final Score at Lv3
+
+--- Row 19 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Points
+  Unnamed: 4: RAG Score (L3)
+  Unnamed: 5: RAG Score Calculation
+  Unnamed: 6: Uplift Opportunity
+
+--- Row 20 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management.
+  Unnamed: 4: No Challenges
+  Unnamed: 5: No observed pain point.
+  Unnamed: 6: Implement a supplier self-service portal to streamline supplier interactions and data management.
+
+--- Row 21 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 6: Enhance self-service functionalities to empower buyers to manage requisition inquiries independently.
+
+--- Row 22 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle. Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency. At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity across all observed pain points.
+  Unnamed: 6: Improve system integration to facilitate seamless purchase order inquiry resolution.
+
+--- Row 23 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 6: Streamline payment processes by integrating systems to reduce manual data handling and improve inquiry resolution efficiency.
+
+--- Row 24 ---
+
+--- Row 25 ---
+
+--- Row 26 ---
+  Filterer agents output: Final Score at Lv2
+
+--- Row 27 ---
+  Filterer agents output: Lv2 Name
+  Unnamed: 1: Key Pain Points
+  Unnamed: 2: RAG Score (L2)
+  Framework Pain Point: RAG Score Calculation
+  Unnamed: 4: Key Uplift Opportunity
+
+--- Row 28 ---
+  Filterer agents output: 05.10 Purchasing/Payment Inquiries
+  Unnamed: 1: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management. Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries. System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle. Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency. At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries. At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 2: Significant Challenges
+  Framework Pain Point: Significant Challenges at Lv3 for Support Requisition Inquiries, Support Purchase Order Inquiries, and Manage Payment Inquiries & Exceptions.
+  Unnamed: 4: Implement a supplier self-service portal, enhance self-service functionalities, improve system integration, and streamline payment processes to reduce manual data handling and improve inquiry resolution efficiency.
+
+====================================================================================================
+
+=== Sheet: output3 ===
+Shape: (42, 8)
+Columns: ['Filterer agents output', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7']
+
+--- Row 0 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Point Number
+  Unnamed: 3: Framework Pain Point
+  Unnamed: 4: Observed (Y/N)
+  Unnamed: 5: Client-Specific Expression
+  Unnamed: 6: Interview Quote
+  Unnamed: 7: Uplift Opportunity
+
+--- Row 1 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: 1
+  Unnamed: 3: There is currently no supplier self-service portal
+  Unnamed: 4: Y
+  Unnamed: 5: Stouty Inc. currently lacks a supplier self-service portal, which inhibits suppliers from managing their information independently and efficiently.
+  Unnamed: 6: [ "There is currently no supplier self-service portal" ]
+Not in transcript
+  Unnamed: 7: Implement a supplier self-service portal to enable suppliers to manage their data and inquiries independently, reducing the workload on internal teams.
+
+--- Row 2 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries through self-service
+  Unnamed: 4: N
+  Unnamed: 7: Enhance the self-service capabilities for buyers to manage their own requisition inquiries, reducing dependency on central teams.
+
+--- Row 3 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Requisitions through self-service
+  Unnamed: 4: N
+  Unnamed: 7: Develop a self-service portal for buyers to manage purchase requisition inquiries independently.
+
+--- Row 4 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 2
+  Unnamed: 3: When Purchase Requisition inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+  Unnamed: 7: Establish a centralised system for managing purchase requisition inquiries that cannot be resolved through self-service.
+
+--- Row 5 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 3
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Orders through self-service
+  Unnamed: 4: Y
+  Unnamed: 5: Stouty Inc. faces challenges in enabling buyers to address their own purchase order inquiries due to system constraints and lack of integration.
+  Unnamed: 6: [ "The workflows don't really work that well and the is a result the user experience is a bit suboptimal","So the the three systems you know will dive into what's working, what's not, but one of the issues that we have is that they don't really talk to each other." ]
+  Unnamed: 7: Improve system integration and workflows to enhance buyer self-service capabilities for purchase order inquiries.
+
+--- Row 6 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 4
+  Unnamed: 3: When Purchase Order inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The lack of integration between Cooper, Uni Market, and Oracle at Stouty Inc. hinders the ability of central purchasing teams to manage purchase order inquiries effectively.
+  Unnamed: 6: [ "The three systems don't really talk to each other." ]
+  Unnamed: 7: Implement a centralised inquiry management system that integrates with existing platforms to streamline purchase order inquiry resolutions.
+
+--- Row 7 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 5
+  Unnamed: 3: There are system constraints that prevent efficient resolution of Purchase Order inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: System constraints at Stouty Inc., such as the lack of integration between Cooper, Uni Market, and Oracle, prevent efficient resolution of purchase order inquiries.
+  Unnamed: 6: [ "There's no real supplier data integration between Cooper, Uni Market and Oracle." ]
+  Unnamed: 7: Enhance system integration to eliminate constraints and enable efficient resolution of purchase order inquiries.
+
+--- Row 8 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: 1
+  Unnamed: 3: Where payments are made from across multiple systems, it can be difficult to efficiently resolve payment inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The use of multiple systems at Stouty Inc. complicates the resolution of payment inquiries, leading to inefficiencies.
+  Unnamed: 6: [ "The invoices and the POS flow from Uni Market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay." ]
+  Unnamed: 7: Consolidate payment systems to streamline the resolution of payment inquiries and reduce manual data entry.
+
+--- Row 9 ---
+  Filterer agents output: Additional 1
+  Unnamed: 1: The process for managing supplier data and integration across systems.
+  Unnamed: 3: There is a lack of integration between key systems, leading to inefficiencies and manual data entry.
+  Unnamed: 4: Y
+  Unnamed: 5: Stouty Inc. experiences significant inefficiencies due to the lack of integration between Cooper, Uni Market, and Oracle, necessitating manual data entry and increasing the risk of errors.
+  Unnamed: 6: [ "The three systems don't really talk to each other.","There's no real supplier data integration between Cooper, Uni Market and Oracle." ]
+  Unnamed: 7: Implement a robust integration solution to connect Cooper, Uni Market, and Oracle, reducing manual data entry and improving data accuracy.
+
+--- Row 10 ---
+
+--- Row 11 ---
+
+--- Row 12 ---
+
+--- Row 13 ---
+
+--- Row 14 ---
+
+--- Row 15 ---
+
+--- Row 16 ---
+
+--- Row 17 ---
+
+--- Row 18 ---
+
+--- Row 19 ---
+
+--- Row 20 ---
+
+--- Row 21 ---
+  Filterer agents output: Final Score at Pain Point Level
+
+--- Row 22 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Pain Points
+  Unnamed: 2: RAG Score
+  Unnamed: 3: RAG Score Calculation
+  Unnamed: 4: Uplift Opportunity
+
+--- Row 23 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management.
+  Unnamed: 2: Low
+  Unnamed: 3: No observed pain point.
+  Unnamed: 4: Implement a supplier self-service portal to streamline supplier interactions and data management.
+
+--- Row 24 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Enhance self-service functionalities to empower buyers to manage requisition inquiries independently.
+
+--- Row 25 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Improve system integration to facilitate seamless purchase order inquiry resolution.
+
+--- Row 26 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Develop self-service functionalities to allow buyers to efficiently manage purchase order inquiries.
+
+--- Row 27 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Establish a robust process and system support for central purchasing teams to manage purchase order inquiries effectively.
+
+--- Row 28 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Streamline payment processes by integrating systems to reduce manual data handling and improve inquiry resolution efficiency.
+
+--- Row 29 ---
+
+--- Row 30 ---
+
+--- Row 31 ---
+  Filterer agents output: Final Score at Lv3
+
+--- Row 32 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Points
+  Unnamed: 4: RAG Score (L3)
+  Unnamed: 5: RAG Score Calculation
+  Unnamed: 6: Uplift Opportunity
+
+--- Row 33 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management.
+  Unnamed: 4: No Challenges
+  Unnamed: 5: No observed pain point.
+  Unnamed: 6: Implement a supplier self-service portal to streamline supplier interactions and data management.
+
+--- Row 34 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 6: Enhance self-service functionalities to empower buyers to manage requisition inquiries independently.
+
+--- Row 35 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle. Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency. At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity across all observed pain points.
+  Unnamed: 6: Improve system integration to facilitate seamless purchase order inquiry resolution.
+
+--- Row 36 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 6: Streamline payment processes by integrating systems to reduce manual data handling and improve inquiry resolution efficiency.
+
+--- Row 37 ---
+
+--- Row 38 ---
+
+--- Row 39 ---
+  Filterer agents output: Final Score at Lv2
+
+--- Row 40 ---
+  Filterer agents output: Lv2 Name
+  Unnamed: 1: Key Pain Points
+  Unnamed: 2: RAG Score (L2)
+  Unnamed: 3: RAG Score Calculation
+  Unnamed: 4: Key Uplift Opportunity
+
+--- Row 41 ---
+  Filterer agents output: 05.10 Purchasing/Payment Inquiries
+  Unnamed: 1: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management. Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries. System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle. Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency. At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries. At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 2: Significant Challenges
+  Unnamed: 3: Significant Challenges at Lv3 for Support Requisition Inquiries, Support Purchase Order Inquiries, and Manage Payment Inquiries & Exceptions.
+  Unnamed: 4: Implement a supplier self-service portal, enhance self-service functionalities, improve system integration, and streamline payment processes to reduce manual data handling and improve inquiry resolution efficiency.
+
+====================================================================================================
+
+=== Sheet: output2 ===
+Shape: (42, 8)
+Columns: ['Filterer agents output', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7']
+
+--- Row 0 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Point Number
+  Unnamed: 3: Framework Pain Point
+  Unnamed: 4: Observed (Y/N)
+  Unnamed: 5: Client-Specific Expression
+  Unnamed: 6: Interview Quote
+  Unnamed: 7: Uplift Opportunity
+
+--- Row 1 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: 1
+  Unnamed: 3: There is currently no supplier self-service portal
+  Unnamed: 4: N
+  Unnamed: 7: Implement a supplier self-service portal to streamline supplier interactions and reduce manual handling.
+
+--- Row 2 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries through self-service
+  Unnamed: 4: Y
+  Unnamed: 5: Stouty Inc. faces challenges in enabling buyers to address their own requisition inquiries due to limited self-service capabilities, leading to inefficiencies in the procurement process.
+  Unnamed: 6: [ "You know, if a buyer has any issues that they really find it difficult to understand who they can reach out to, to progress a procurement request.","Also, the requisitions you are able to raise a requisition before a supplier risk assessment is done because of the way uni market." ]
+  Unnamed: 7: Enhance self-service capabilities to empower buyers in addressing requisition inquiries independently, reducing dependency on procurement staff.
+
+--- Row 3 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Requisitions through self-service
+  Unnamed: 4: Y
+  Unnamed: 5: Stouty Inc. experiences limited self-service capabilities for buyers to address purchase requisition inquiries, causing delays and inefficiencies.
+  Unnamed: 6: [ "You know, if a buyer has any issues that they really find it difficult to understand who they can reach out to, to progress a procurement request.","Also, the requisitions you are able to raise a requisition before a supplier risk assessment is done because of the way uni market." ]
+  Unnamed: 7: Develop self-service tools to facilitate buyer inquiries into purchase requisitions, enhancing efficiency and reducing manual intervention.
+
+--- Row 4 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 2
+  Unnamed: 3: When Purchase Requisition inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: Without system enablement, Stouty Inc.'s central purchasing teams struggle to manage inquiries efficiently when self-service options fall short, leading to operational bottlenecks.
+  Unnamed: 6: [ "You know, if a buyer has any issues that they really find it difficult to understand who they can reach out to, to progress a procurement request.","Also, the requisitions you are able to raise a requisition before a supplier risk assessment is done because of the way uni market." ]
+  Unnamed: 7: Implement a robust system for central purchasing teams to manage inquiries that cannot be resolved through self-service, ensuring seamless operations.
+
+--- Row 5 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 3
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Orders through self-service
+  Unnamed: 4: Y
+  Unnamed: 5: Stouty Inc. faces challenges in enabling buyers to address purchase order inquiries independently, leading to inefficiencies and increased workload for procurement teams.
+  Unnamed: 6: [ "You know, if a buyer has any issues that they really find it difficult to understand who they can reach out to, to progress a procurement request.","Also, the requisitions you are able to raise a requisition before a supplier risk assessment is done because of the way uni market." ]
+  Unnamed: 7: Enhance self-service capabilities to empower buyers in addressing purchase order inquiries independently, reducing dependency on procurement staff.
+
+--- Row 6 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 4
+  Unnamed: 3: When Purchase Order inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: Stouty Inc. lacks system support for managing purchase order inquiries that cannot be resolved through self-service, resulting in inefficiencies and delays.
+  Unnamed: 6: [ "You know, if a buyer has any issues that they really find it difficult to understand who they can reach out to, to progress a procurement request.","Also, the requisitions you are able to raise a requisition before a supplier risk assessment is done because of the way uni market." ]
+  Unnamed: 7: Implement system support for managing purchase order inquiries that cannot be resolved through self-service, ensuring efficient handling by central purchasing teams.
+
+--- Row 7 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 5
+  Unnamed: 3: There are system constraints that prevent efficient resolution of Purchase Order inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: System constraints at Stouty Inc. hinder the efficient resolution of purchase order inquiries, causing delays and operational inefficiencies.
+  Unnamed: 6: [ "You know, if a buyer has any issues that they really find it difficult to understand who they can reach out to, to progress a procurement request.","Also, the requisitions you are able to raise a requisition before a supplier risk assessment is done because of the way uni market." ]
+  Unnamed: 7: Address system constraints to facilitate efficient resolution of purchase order inquiries, enhancing overall process efficiency.
+
+--- Row 8 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices.
+  Unnamed: 2: 1
+  Unnamed: 3: Where payments are made from across multiple systems, it can be difficult to efficiently resolve payment inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: Stouty Inc. faces challenges in resolving payment inquiries efficiently due to the use of multiple systems, leading to delays and increased manual workload.
+  Unnamed: 6: [ "And then for us to actually make the payment 'cause remember the the invoices and the.","And the POS flow from?","Flow from uni market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Unnamed: 7: Rationalise the tech stack to create a seamless end-to-end solution for payment processing, reducing manual intervention and improving efficiency.
+
+--- Row 9 ---
+
+--- Row 10 ---
+
+--- Row 11 ---
+
+--- Row 12 ---
+
+--- Row 13 ---
+
+--- Row 14 ---
+
+--- Row 15 ---
+
+--- Row 16 ---
+
+--- Row 17 ---
+
+--- Row 18 ---
+
+--- Row 19 ---
+
+--- Row 20 ---
+
+--- Row 21 ---
+  Filterer agents output: Final Score at Pain Point Level
+
+--- Row 22 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Pain Points
+  Unnamed: 2: RAG Score
+  Unnamed: 3: RAG Score Calculation
+  Unnamed: 4: Uplift Opportunity
+
+--- Row 23 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management.
+  Unnamed: 2: Low
+  Unnamed: 3: No observed pain point.
+  Unnamed: 4: Implement a supplier self-service portal to streamline supplier interactions and data management.
+
+--- Row 24 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Enhance self-service functionalities to empower buyers to manage requisition inquiries independently.
+
+--- Row 25 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Improve system integration to facilitate seamless purchase order inquiry resolution.
+
+--- Row 26 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Develop self-service functionalities to allow buyers to efficiently manage purchase order inquiries.
+
+--- Row 27 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Establish a robust process and system support for central purchasing teams to manage purchase order inquiries effectively.
+
+--- Row 28 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Streamline payment processes by integrating systems to reduce manual data handling and improve inquiry resolution efficiency.
+
+--- Row 29 ---
+
+--- Row 30 ---
+
+--- Row 31 ---
+  Filterer agents output: Final Score at Lv3
+
+--- Row 32 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Points
+  Unnamed: 4: RAG Score (L3)
+  Unnamed: 5: RAG Score Calculation
+  Unnamed: 6: Uplift Opportunity
+
+--- Row 33 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management.
+  Unnamed: 4: No Challenges
+  Unnamed: 5: No observed pain point.
+  Unnamed: 6: Implement a supplier self-service portal to streamline supplier interactions and data management.
+
+--- Row 34 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 6: Enhance self-service functionalities to empower buyers to manage requisition inquiries independently.
+
+--- Row 35 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle. Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency. At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity across all observed pain points.
+  Unnamed: 6: Improve system integration to facilitate seamless purchase order inquiry resolution.
+
+--- Row 36 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 6: Streamline payment processes by integrating systems to reduce manual data handling and improve inquiry resolution efficiency.
+
+--- Row 37 ---
+
+--- Row 38 ---
+
+--- Row 39 ---
+  Filterer agents output: Final Score at Lv2
+
+--- Row 40 ---
+  Filterer agents output: Lv2 Name
+  Unnamed: 1: Key Pain Points
+  Unnamed: 2: RAG Score (L2)
+  Unnamed: 3: RAG Score Calculation
+  Unnamed: 4: Key Uplift Opportunity
+
+--- Row 41 ---
+  Filterer agents output: 05.10 Purchasing/Payment Inquiries
+  Unnamed: 1: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management. Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries. System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle. Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency. At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries. At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 2: Significant Challenges
+  Unnamed: 3: Significant Challenges at Lv3 for Support Requisition Inquiries, Support Purchase Order Inquiries, and Manage Payment Inquiries & Exceptions.
+  Unnamed: 4: Implement a supplier self-service portal, enhance self-service functionalities, improve system integration, and streamline payment processes to reduce manual data handling and improve inquiry resolution efficiency.
+
+====================================================================================================
+
+=== Sheet: output4 ===
+Shape: (35, 8)
+Columns: ['Filterer agents output', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'All quotes verified in transcript', 'Unnamed: 7']
+
+--- Row 0 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Point Number
+  Unnamed: 3: Framework Pain Point
+  Unnamed: 4: Observed (Y/N)
+  Unnamed: 5: Client-Specific Expression
+  All quotes verified in transcript: Interview Quote
+  Unnamed: 7: Uplift Opportunity
+
+--- Row 1 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: 1
+  Unnamed: 3: There is currently no supplier self-service portal
+  Unnamed: 4: N
+
+--- Row 2 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries through self-service
+  Unnamed: 4: Y
+  Unnamed: 5: The client has limited capability to enable buyers to address their own inquiries through self-service, impacting efficiency in handling requisition queries.
+  All quotes verified in transcript: [ "You know, if a buyer has any issues that they really find it difficult to understand who they can reach out to, to progress a procurement request." ]
+  Unnamed: 7: Implement a self-service portal for buyers to address requisition inquiries independently, reducing dependency on manual intervention.
+
+--- Row 3 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Requisitions through self-service
+  Unnamed: 4: Y
+  Unnamed: 5: The client experiences limited capability to enable buyers to address their own inquiries into Purchase Orders through self-service, affecting the efficiency of purchase order management.
+  All quotes verified in transcript: [ "Also, the requisitions you are able to raise a requisition before a supplier risk assessment is done because of the way uni market works, so that's really not how the process should work." ]
+  Unnamed: 7: Enhance self-service capabilities for purchase order inquiries to streamline the process and improve buyer autonomy.
+
+--- Row 4 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 2
+  Unnamed: 3: When Purchase Requisition inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+
+--- Row 5 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 3
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Orders through self-service
+  Unnamed: 4: Y
+  Unnamed: 5: The client has limited capability to enable buyers to address their own inquiries into Purchase Orders through self-service, leading to inefficiencies in the purchasing process.
+  All quotes verified in transcript: [ "Also, the requisitions you are able to raise a requisition before a supplier risk assessment is done because of the way uni market works, so that's really not how the process should work." ]
+  Unnamed: 7: Develop a self-service portal for purchase order inquiries to empower buyers and reduce manual intervention.
+
+--- Row 6 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 4
+  Unnamed: 3: When Purchase Order inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+
+--- Row 7 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 5
+  Unnamed: 3: There are system constraints that prevent efficient resolution of Purchase Order inquiries
+  Unnamed: 4: N
+
+--- Row 8 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: 1
+  Unnamed: 3: Where payments are made from across multiple systems, it can be difficult to efficiently resolve payment inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The client faces difficulties in efficiently resolving payment inquiries due to multiple systems, leading to inefficiencies in managing payment exceptions.
+  All quotes verified in transcript: [ "And then for us to actually make the payment 'cause remember the the invoices and the POS flow from? Flow from uni market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Unnamed: 7: Rationalise and integrate systems to create a streamlined process for managing payment inquiries and exceptions, reducing manual data entry and errors.
+
+--- Row 9 ---
+  Filterer agents output: Additional #
+  Unnamed: 1: Additional #
+  Unnamed: 2: Additional #
+  Unnamed: 3: Additional #
+  Unnamed: 4: Y
+  Unnamed: 5: The client experiences a cumbersome supplier onboarding process that takes 60 days, leading to inefficiencies and reluctance to onboard new suppliers.
+  All quotes verified in transcript: [ "It takes us 60 days to onboard a supplier and.","Yeah. And it really because it because it's so cumbersome and so. Time consuming staff tend to stick in the procurement staff tend to stick with existing suppliers to avoid the process of setting up a new supply, which is obviously suboptimal because you know you always want to get the best deal and there might be better supplies that can service our needs." ]
+  Unnamed: 7: Streamline the supplier onboarding process to reduce time and effort, encouraging the use of new suppliers and enhancing procurement flexibility.
+
+--- Row 10 ---
+
+--- Row 11 ---
+
+--- Row 12 ---
+
+--- Row 13 ---
+
+--- Row 14 ---
+  Filterer agents output: Final Score at Pain Point Level
+
+--- Row 15 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Pain Points
+  Unnamed: 2: RAG Score
+  Unnamed: 3: RAG Score Calculation
+  Unnamed: 4: Uplift Opportunity
+
+--- Row 16 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management.
+  Unnamed: 2: Low
+  Unnamed: 3: No observed pain point.
+  Unnamed: 4: Implement a supplier self-service portal to streamline supplier interactions and data management.
+
+--- Row 17 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Enhance self-service functionalities to empower buyers to manage requisition inquiries independently.
+
+--- Row 18 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Improve system integration to facilitate seamless purchase order inquiry resolution.
+
+--- Row 19 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Develop self-service functionalities to allow buyers to efficiently manage purchase order inquiries.
+
+--- Row 20 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Establish a robust process and system support for central purchasing teams to manage purchase order inquiries effectively.
+
+--- Row 21 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity.
+  Unnamed: 4: Streamline payment processes by integrating systems to reduce manual data handling and improve inquiry resolution efficiency.
+
+--- Row 22 ---
+
+--- Row 23 ---
+
+--- Row 24 ---
+  Filterer agents output: Final Score at Lv3
+
+--- Row 25 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Points
+  Unnamed: 4: RAG Score (L3)
+  Unnamed: 5: RAG Score Calculation
+  All quotes verified in transcript: Uplift Opportunity
+
+--- Row 26 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management.
+  Unnamed: 4: No Challenges
+  Unnamed: 5: No observed pain point.
+  All quotes verified in transcript: Implement a supplier self-service portal to streamline supplier interactions and data management.
+
+--- Row 27 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity.
+  All quotes verified in transcript: Enhance self-service functionalities to empower buyers to manage requisition inquiries independently.
+
+--- Row 28 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle. Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency. At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity across all observed pain points.
+  All quotes verified in transcript: Improve system integration to facilitate seamless purchase order inquiry resolution.
+
+--- Row 29 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 4: Significant Challenges
+  Unnamed: 5: High relevance, urgency, frequency, and opportunity.
+  All quotes verified in transcript: Streamline payment processes by integrating systems to reduce manual data handling and improve inquiry resolution efficiency.
+
+--- Row 30 ---
+
+--- Row 31 ---
+
+--- Row 32 ---
+  Filterer agents output: Final Score at Lv2
+
+--- Row 33 ---
+  Filterer agents output: Lv2 Name
+  Unnamed: 1: Key Pain Points
+  Unnamed: 2: RAG Score (L2)
+  Unnamed: 3: RAG Score Calculation
+  Unnamed: 4: Key Uplift Opportunity
+
+--- Row 34 ---
+  Filterer agents output: 05.10 Purchasing/Payment Inquiries
+  Unnamed: 1: Stouty Inc does not currently have a supplier self-service portal, leading to inefficiencies in supplier interactions and data management. Stouty Inc experiences limited capability in enabling buyers to address their own requisition inquiries through self-service, affecting efficiency in resolving these inquiries. System constraints at Stouty Inc prevent efficient resolution of purchase order inquiries, primarily due to lack of integration between Cooper, Uni Market, and Oracle. Stouty Inc's current systems offer limited capability for buyers to address their own purchase order inquiries through self-service, affecting efficiency. At Stouty Inc, when purchase order inquiries cannot be addressed through self-service, there is no established process or system enablement for central purchasing teams to manage these inquiries. At Stouty Inc, managing payment inquiries is challenging due to payments being made from multiple systems, leading to inefficiencies in resolving these inquiries.
+  Unnamed: 2: Significant Challenges
+  Unnamed: 3: Significant Challenges at Lv3 for Support Requisition Inquiries, Support Purchase Order Inquiries, and Manage Payment Inquiries & Exceptions.
+  Unnamed: 4: Implement a supplier self-service portal, enhance self-service functionalities, improve system integration, and streamline payment processes to reduce manual data handling and improve inquiry resolution efficiency.
+
+====================================================================================================
+
+=== Sheet: Output7 ===
+Shape: (14, 8)
+Columns: ['Filterer agents output', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7']
+
+--- Row 0 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Point Number
+  Unnamed: 3: Framework Pain Point
+  Unnamed: 4: Observed (Y/N)
+  Unnamed: 5: Client-Specific Expression
+  Unnamed: 6: Interview Quote
+  Unnamed: 7: Uplift Opportunity
+
+--- Row 1 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: 1
+  Unnamed: 3: There is currently no supplier self-service portal
+  Unnamed: 4: N
+  Unnamed: 7: Implement a supplier self-service portal to streamline supplier interactions and reduce manual workload.
+
+--- Row 2 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries through self-service
+  Unnamed: 4: N
+  Unnamed: 7: Enhance self-service capabilities for buyers to independently manage requisition inquiries, reducing dependency on centralised support.
+
+--- Row 3 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Requisitions through self-service
+  Unnamed: 4: N
+
+--- Row 4 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 2
+  Unnamed: 3: When Purchase Requisition inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+
+--- Row 5 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 3
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Orders through self-service
+  Unnamed: 4: N
+
+--- Row 6 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 4
+  Unnamed: 3: When Purchase Order inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+
+--- Row 7 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 5
+  Unnamed: 3: There are system constraints that prevent efficient resolution of Purchase Order inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The client experiences system constraints that prevent efficient resolution of Purchase Order inquiries, particularly due to lack of integration between their systems, which leads to manual re-entry of data and delays.
+  Unnamed: 6: [ "The three systems you know will dive into what's working, what's not, but one of the issues that we have is that they don't really talk to each other.","So there's no real supplier data integration between Cooper, Uni Market and Oracle.","When you set up a supply and cooperative got to set it up in new Market and Oracle, there is an ingestion of invoices that happens into Oracle from Unimarket.","So I think that happens fortnightly but besides the invoice integration there's no other integration, so the system is effectively don't talk to each other." ]
+  Unnamed: 7: Implement a unified system or enhance existing systems to ensure seamless integration and data flow to reduce manual re-entry and improve inquiry resolution efficiency.
+
+--- Row 8 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: 1
+  Unnamed: 3: Where payments are made from across multiple systems, it can be difficult to efficiently resolve payment inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The client finds it difficult to efficiently resolve payment inquiries due to payments being made from multiple systems, leading to manual data handling and potential errors.
+  Unnamed: 6: [ "And then for us to actually make the payment 'cause remember the the invoices and the POS flow from?","Flow from uni market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Unnamed: 7: Streamline the payment process by integrating systems to enable automatic data transfer and reduce manual entry, thereby minimising errors and improving efficiency.
+
+--- Row 9 ---
+  Filterer agents output: Additional #
+  Unnamed: 1: Additional Pain Point
+  Unnamed: 2: Additional #
+  Unnamed: 3: Additional Pain Point
+  Unnamed: 4: Y
+  Unnamed: 5: The supplier onboarding process is cumbersome, taking up to 60 days, which discourages staff from engaging new suppliers and impacts procurement efficiency.
+  Unnamed: 6: [ "It takes us 60 days to onboard a supplier and.","And it really because it because it's so cumbersome and so.","Time consuming staff tend to stick in the procurement staff tend to stick with existing suppliers to avoid the process of setting up a new supply, which is obviously suboptimal because you know you always want to get the best deal and there might be better supplies that can service our needs." ]
+  Unnamed: 7: Redesign the supplier onboarding process to be more efficient and user-friendly, potentially through automation and clearer guidance, to encourage engagement with new suppliers and improve procurement outcomes.
+
+--- Row 10 ---
+
+--- Row 11 ---
+
+--- Row 12 ---
+
+--- Row 13 ---
+  Filterer agents output: Scoring results not in tables
+
+====================================================================================================
+
+=== Sheet: output8 ===
+Shape: (34, 8)
+Columns: ['Filterer agents output', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Should be N/A for pain points not observed']
+
+--- Row 0 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Point Number
+  Unnamed: 3: Framework Pain Point
+  Unnamed: 4: Observed (Y/N)
+  Unnamed: 5: Client-Specific Expression
+  Unnamed: 6: Interview Quote
+  Should be N/A for pain points not observed: Uplift Opportunity
+
+--- Row 1 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: 1
+  Unnamed: 3: There is currently no supplier self-service portal
+  Unnamed: 4: N
+  Should be N/A for pain points not observed: Implement a supplier self-service portal to streamline supplier interactions and reduce manual workload.
+
+--- Row 2 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries through self-service
+  Unnamed: 4: N
+  Should be N/A for pain points not observed: Enhance self-service capabilities for buyers to independently manage requisition inquiries, reducing dependency on centralised support.
+
+--- Row 3 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Requisitions through self-service
+  Unnamed: 4: N
+  Should be N/A for pain points not observed: Implement self-service tools for buyers to manage purchase requisition inquiries independently.
+
+--- Row 4 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 2
+  Unnamed: 3: When Purchase Requisition inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+  Should be N/A for pain points not observed: Establish a system-enabled process for central purchasing teams to efficiently handle purchase requisition inquiries.
+
+--- Row 5 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 3
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Orders through self-service
+  Unnamed: 4: N
+  Should be N/A for pain points not observed: Develop self-service options for buyers to manage purchase order inquiries without centralised assistance.
+
+--- Row 6 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 4
+  Unnamed: 3: When Purchase Order inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+  Should be N/A for pain points not observed: Create a system-enabled process for central purchasing teams to manage purchase order inquiries effectively.
+
+--- Row 7 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 5
+  Unnamed: 3: There are system constraints that prevent efficient resolution of Purchase Order inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The client experiences system constraints that prevent efficient resolution of Purchase Order inquiries, resulting in manual data entry and increased risk of errors.
+  Unnamed: 6: [ "And then for us to actually make the payment 'cause remember the the invoices and the.","And the POS flow from?","Flow from uni market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Should be N/A for pain points not observed: Identify and resolve system constraints to improve the efficiency of purchase order inquiry resolutions.
+
+--- Row 8 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: 1
+  Unnamed: 3: Where payments are made from across multiple systems, it can be difficult to efficiently resolve payment inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The client faces difficulty in efficiently resolving payment inquiries due to payments being made from multiple systems, leading to manual data entry and increased risk of errors.
+  Unnamed: 6: [ "And then for us to actually make the payment 'cause remember the the invoices and the.","And the POS flow from?","Flow from uni market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Should be N/A for pain points not observed: Rationalise the tech stack to create an end-to-end solution, reducing manual data entry and improving the efficiency of payment inquiry resolution.
+
+--- Row 9 ---
+  Filterer agents output: Additional #
+  Unnamed: 1: Additional #
+  Unnamed: 2: Additional #
+  Unnamed: 3: Additional #
+  Unnamed: 4: Y
+  Unnamed: 5: The client faces challenges with supplier onboarding taking 60 days due to cumbersome processes and lack of clear guidance, leading to reliance on existing suppliers and inefficiencies.
+  Unnamed: 6: [ "It takes us 60 days to onboard a supplier and.","And it really because it because it's so cumbersome and so.","Time consuming staff tend to stick in the procurement staff tend to stick with existing suppliers to avoid the process of setting up a new supply, which is obviously suboptimal because you know you always want to get the best deal and there might be better supplies that can service our needs." ]
+  Should be N/A for pain points not observed: Streamline and clarify the supplier onboarding process to reduce time and encourage the use of optimal suppliers.
+
+--- Row 10 ---
+
+--- Row 11 ---
+
+--- Row 12 ---
+
+--- Row 13 ---
+  Filterer agents output: Final Score at Pain Point Level
+
+--- Row 14 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Client Pain Point
+  Unnamed: 2: RAG Score
+  Unnamed: 3: RAG Score Calculation
+  Unnamed: 4: Uplift Opportunity
+
+--- Row 15 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 2: Low
+  Unnamed: 3: No observed pain points in this area.
+  Unnamed: 4: Implement a supplier self-service portal to streamline supplier interactions and reduce manual workload.
+
+--- Row 16 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 2: Low
+  Unnamed: 3: No observed pain points in this area.
+  Unnamed: 4: Enhance self-service capabilities for buyers to independently manage requisition inquiries, reducing dependency on centralised support.
+
+--- Row 17 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The client experiences system constraints that prevent efficient resolution of Purchase Order inquiries, resulting in manual data entry and increased risk of errors.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity due to persistent system constraints causing significant disruption.
+  Unnamed: 4: Identify and resolve system constraints to improve the efficiency of purchase order inquiry resolutions.
+
+--- Row 18 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The client faces difficulty in efficiently resolving payment inquiries due to payments being made from multiple systems, leading to manual data entry and increased risk of errors.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity due to persistent issues with multi-system payments causing significant disruption.
+  Unnamed: 4: Rationalise the tech stack to create an end-to-end solution, reducing manual data entry and improving the efficiency of payment inquiry resolution.
+
+--- Row 19 ---
+  Filterer agents output: Additional #
+  Unnamed: 1: The client faces challenges with supplier onboarding taking 60 days due to cumbersome processes and lack of clear guidance, leading to reliance on existing suppliers and inefficiencies.
+  Unnamed: 2: High
+  Unnamed: 3: High relevance, urgency, frequency, and opportunity due to significant delays and inefficiencies in supplier onboarding.
+  Unnamed: 4: Streamline and clarify the supplier onboarding process to reduce time and encourage the use of optimal suppliers.
+
+--- Row 20 ---
+
+--- Row 21 ---
+
+--- Row 22 ---
+
+--- Row 23 ---
+  Filterer agents output: Final Score at Lv3
+
+--- Row 24 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Client Pain Points
+  Unnamed: 3: RAG Score (L3)
+  Unnamed: 4: RAG Score Calculation
+  Unnamed: 6: Uplift Opportunity
+  Should be N/A for pain points not observed: Confidence
+
+--- Row 25 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 3: No Challenges
+  Unnamed: 4: No observed pain points in this area.
+  Unnamed: 6: Implement a supplier self-service portal to streamline supplier interactions and reduce manual workload.
+  Should be N/A for pain points not observed: Medium
+
+--- Row 26 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 3: No Challenges
+  Unnamed: 4: No observed pain points in this area.
+  Unnamed: 6: Enhance self-service capabilities for buyers to independently manage requisition inquiries, reducing dependency on centralised support.
+  Should be N/A for pain points not observed: Medium
+
+--- Row 27 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: System constraints prevent efficient resolution of Purchase Order inquiries.
+  Unnamed: 3: Significant Challenges
+  Unnamed: 4: High RAG score due to persistent system constraints causing significant disruption.
+  Unnamed: 6: Identify and resolve system constraints to improve the efficiency of purchase order inquiry resolutions.
+  Should be N/A for pain points not observed: High
+
+--- Row 28 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: Difficulty in efficiently resolving payment inquiries due to payments being made from multiple systems.
+  Unnamed: 3: Significant Challenges
+  Unnamed: 4: High RAG score due to persistent issues with multi-system payments causing significant disruption.
+  Unnamed: 6: Rationalise the tech stack to create an end-to-end solution, reducing manual data entry and improving the efficiency of payment inquiry resolution.
+  Should be N/A for pain points not observed: High
+
+--- Row 29 ---
+
+--- Row 30 ---
+
+--- Row 31 ---
+  Filterer agents output: Final Score at Lv2
+
+--- Row 32 ---
+  Filterer agents output: Lv2 Name
+  Unnamed: 1: Key Pain Points
+  Unnamed: 2: RAG Score (L2)
+  Unnamed: 3: RAG Score Calculation
+  Unnamed: 4: Key Uplift Opportunity
+  Unnamed: 5: Rationale
+  Unnamed: 6: Confidence
+  Should be N/A for pain points not observed: Additional Information
+
+--- Row 33 ---
+  Filterer agents output: 05.10 Purchasing/Payment Inquiries
+  Unnamed: 1: System constraints in purchase order inquiries, multi-system payment issues, supplier onboarding inefficiencies.
+  Unnamed: 2: Significant Challenges
+  Unnamed: 3: High RAG scores in multiple Lv3 areas due to significant disruptions.
+  Unnamed: 4: Streamline processes and rationalise systems to improve efficiency and reduce manual workload.
+  Unnamed: 5: The department received this score due to persistent and significant challenges in key operational areas, impacting efficiency and increasing error risks.
+  Unnamed: 6: High
+  Should be N/A for pain points not observed: Further insights into the supplier onboarding process and its alignment with the framework would improve confidence.
+
+====================================================================================================
+
+=== Sheet: output9 ===
+Shape: (56, 8)
+Columns: ['Filterer agents output', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Should be N/A for pain points not observed']
+
+--- Row 0 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Point Number
+  Unnamed: 3: Framework Pain Point
+  Unnamed: 4: Observed (Y/N)
+  Unnamed: 5: Client-Specific Expression
+  Unnamed: 6: Interview Quote
+  Should be N/A for pain points not observed: Uplift Opportunity
+
+--- Row 1 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: Pain Point 1
+  Unnamed: 3: There is currently no supplier self-service portal
+  Unnamed: 4: N
+  Should be N/A for pain points not observed: Implement a supplier self-service portal to streamline supplier interactions and reduce manual workload.
+
+--- Row 2 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Pain Point 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries through self-service
+  Unnamed: 4: N
+  Should be N/A for pain points not observed: Enhance self-service capabilities to empower buyers in addressing their requisition inquiries independently.
+
+--- Row 3 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Pain Point 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Requisitions through self-service
+  Unnamed: 4: N
+  Should be N/A for pain points not observed: Develop self-service tools for buyers to independently resolve purchase requisition inquiries.
+
+--- Row 4 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Pain Point 2
+  Unnamed: 3: When Purchase Requisition inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+  Should be N/A for pain points not observed: Establish a centralised system to manage purchase requisition inquiries efficiently.
+
+--- Row 5 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Pain Point 3
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Orders through self-service
+  Unnamed: 4: Y
+  Unnamed: 5: The client experiences limited capability for buyers to address their own inquiries into Purchase Orders through self-service, which is exacerbated by the lack of integration between systems, leading to inefficiencies.
+  Unnamed: 6: [ "So and and and uni market lets you raise one without kind of noting that that there is a SRA or not.","You can't really modify a requisition. You really need to cancel and resubmit it even if it's not approved, so there's no way of amending and nonapproved even a nonapproved requisition, which is, you know, a bit annoying but." ]
+  Should be N/A for pain points not observed: Enhance system integration and self-service capabilities to empower buyers in resolving purchase order inquiries independently.
+
+--- Row 6 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Pain Point 4
+  Unnamed: 3: When Purchase Order inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+  Should be N/A for pain points not observed: Implement a centralised system for managing purchase order inquiries that cannot be resolved through self-service.
+
+--- Row 7 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Pain Point 5
+  Unnamed: 3: There are system constraints that prevent efficient resolution of Purchase Order inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The client faces system constraints that prevent efficient resolution of Purchase Order inquiries due to lack of integration between systems, causing manual re-entry and inefficiencies.
+  Unnamed: 6: [ "The system is effectively don't talk to each other.","And then for us to actually make the payment 'cause remember the the invoices and the.","And the POS flow from?","Flow from uni market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Should be N/A for pain points not observed: Rationalise the tech stack to reduce manual data re-entry and improve system integration for efficient inquiry resolution.
+
+--- Row 8 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: Pain Point 1
+  Unnamed: 3: Where payments are made from across multiple systems, it can be difficult to efficiently resolve payment inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The client finds it difficult to efficiently resolve payment inquiries due to multiple systems being used, resulting in manual data handling and inefficiencies.
+  Unnamed: 6: [ "And then for us to actually make the payment 'cause remember the the invoices and the.","And the POS flow from?","Flow from uni market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Should be N/A for pain points not observed: Implement an integrated payment system to streamline payment inquiries and reduce manual intervention.
+
+--- Row 9 ---
+  Filterer agents output: Additional #
+  Unnamed: 1: Additional #
+  Unnamed: 2: Additional #
+  Unnamed: 3: Additional #
+  Unnamed: 4: Y
+  Unnamed: 5: The client experiences a significant delay in supplier onboarding, taking up to 60 days, which impacts the procurement process efficiency.
+  Unnamed: 6: [ "It takes us 60 days to onboard a supplier and.","Time consuming staff tend to stick in the procurement staff tend to stick with existing suppliers to avoid the process of setting up a new supply, which is obviously suboptimal." ]
+  Should be N/A for pain points not observed: Streamline the supplier onboarding process to reduce time and improve procurement efficiency.
+
+--- Row 10 ---
+
+--- Row 11 ---
+
+--- Row 12 ---
+
+--- Row 13 ---
+  Filterer agents output: Final Score at Pain Point Level
+
+--- Row 14 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Client Pain Points
+  Unnamed: 2: RAG Score
+  Unnamed: 3: RAG Score Reason
+  Unnamed: 4: Uplift Opportunity
+
+--- Row 15 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The client experiences limited capability for buyers to address their own inquiries into Purchase Orders through self-service, which is exacerbated by the lack of integration between systems, leading to inefficiencies.
+  Unnamed: 2: High
+  Unnamed: 3: This issue causes significant disruption and inefficiencies due to lack of integration and self-service capabilities.
+  Unnamed: 4: Enhance system integration and self-service capabilities to empower buyers in resolving purchase order inquiries independently.
+
+--- Row 16 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The client faces system constraints that prevent efficient resolution of Purchase Order inquiries due to lack of integration between systems, causing manual re-entry and inefficiencies.
+  Unnamed: 2: High
+  Unnamed: 3: Persistent system constraints lead to significant inefficiencies and manual workarounds.
+  Unnamed: 4: Rationalise the tech stack to reduce manual data re-entry and improve system integration for efficient inquiry resolution.
+
+--- Row 17 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The client finds it difficult to efficiently resolve payment inquiries due to multiple systems being used, resulting in manual data handling and inefficiencies.
+  Unnamed: 2: High
+  Unnamed: 3: The use of multiple systems causes significant disruption and inefficiencies in resolving payment inquiries.
+  Unnamed: 4: Implement an integrated payment system to streamline payment inquiries and reduce manual intervention.
+
+--- Row 18 ---
+
+--- Row 19 ---
+
+--- Row 20 ---
+
+--- Row 21 ---
+  Filterer agents output: UPDATED AFTER FEEDBACK
+
+--- Row 22 ---
+  Filterer agents output: Final Score at Pain Point Level
+
+--- Row 23 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Client Pain Point
+  Unnamed: 2: RAG Score
+  Unnamed: 3: RAG Score Reason
+  Unnamed: 4: Uplift Opportunity
+
+--- Row 24 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The client experiences limited capability for buyers to address their own inquiries into Purchase Orders through self-service, which is exacerbated by the lack of integration between systems, leading to inefficiencies.
+  Unnamed: 2: High
+  Unnamed: 3: This issue causes significant disruption and inefficiencies due to lack of integration and self-service capabilities.
+  Unnamed: 4: Enhance system integration and self-service capabilities to empower buyers in resolving purchase order inquiries independently.
+
+--- Row 25 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The client faces system constraints that prevent efficient resolution of Purchase Order inquiries due to lack of integration between systems, causing manual re-entry and inefficiencies.
+  Unnamed: 2: High
+  Unnamed: 3: Persistent system constraints lead to significant inefficiencies and manual workarounds.
+  Unnamed: 4: Rationalise the tech stack to reduce manual data re-entry and improve system integration for efficient inquiry resolution.
+
+--- Row 26 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The client finds it difficult to efficiently resolve payment inquiries due to multiple systems being used, resulting in manual data handling and inefficiencies.
+  Unnamed: 2: High
+  Unnamed: 3: The use of multiple systems causes significant disruption and inefficiencies in resolving payment inquiries.
+  Unnamed: 4: Implement an integrated payment system to streamline payment inquiries and reduce manual intervention.
+
+--- Row 27 ---
+
+--- Row 28 ---
+
+--- Row 29 ---
+
+--- Row 30 ---
+
+--- Row 31 ---
+  Filterer agents output: Final Score at Lv3
+
+--- Row 32 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Client Pain Point
+  Unnamed: 3: RAG Score (L3)
+  Unnamed: 4: RAG Score Reason
+  Unnamed: 5: Uplift Opportunity
+  Unnamed: 6: Confidence
+
+--- Row 33 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 3: No Challenges
+  Unnamed: 4: No observed pain points were identified.
+  Unnamed: 5: Implement a supplier self-service portal to streamline supplier interactions and reduce manual workload.
+  Unnamed: 6: High
+
+--- Row 34 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 3: No Challenges
+  Unnamed: 4: No observed pain points were identified.
+  Unnamed: 5: Enhance self-service capabilities to empower buyers in addressing their requisition inquiries independently.
+  Unnamed: 6: High
+
+--- Row 35 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Limited self-service capabilities and system constraints causing inefficiencies.
+  Unnamed: 3: Significant Challenges
+  Unnamed: 4: Multiple high-impact pain points were observed, causing significant inefficiencies.
+  Unnamed: 5: Enhance system integration and self-service capabilities to empower buyers in resolving purchase order inquiries independently.
+  Unnamed: 6: High
+
+--- Row 36 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices.
+  Unnamed: 2: Difficulty in resolving payment inquiries due to multiple systems.
+  Unnamed: 3: Significant Challenges
+  Unnamed: 4: High-impact pain points were observed, leading to significant inefficiencies.
+  Unnamed: 5: Implement an integrated payment system to streamline payment inquiries and reduce manual intervention.
+  Unnamed: 6: High
+
+--- Row 37 ---
+
+--- Row 38 ---
+
+--- Row 39 ---
+  Filterer agents output: UPDATED AFTER FEEDBACK
+
+--- Row 40 ---
+  Filterer agents output: Final Score at Lv3
+
+--- Row 41 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Client Pain Point
+  Unnamed: 3: RAG Score (L3)
+  Unnamed: 4: RAG Score Reason
+  Unnamed: 5: Uplift Opportunity
+  Unnamed: 6: Confidence
+
+--- Row 42 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 3: No Challenges
+  Unnamed: 4: No observed pain points were identified.
+  Unnamed: 5: Implement a supplier self-service portal to streamline supplier interactions and reduce manual workload.
+  Unnamed: 6: High
+
+--- Row 43 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 3: No Challenges
+  Unnamed: 4: No observed pain points were identified.
+  Unnamed: 5: Enhance self-service capabilities to empower buyers in addressing their requisition inquiries independently.
+  Unnamed: 6: High
+
+--- Row 44 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: Limited self-service capabilities and system constraints causing inefficiencies.
+  Unnamed: 3: Significant Challenges
+  Unnamed: 4: Multiple high-impact pain points were observed, causing significant inefficiencies.
+  Unnamed: 5: Enhance system integration and self-service capabilities to empower buyers in resolving purchase order inquiries independently.
+  Unnamed: 6: Medium
+
+--- Row 45 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices.
+  Unnamed: 2: Difficulty in resolving payment inquiries due to multiple systems.
+  Unnamed: 3: Significant Challenges
+  Unnamed: 4: High-impact pain points were observed, leading to significant inefficiencies.
+  Unnamed: 5: Implement an integrated payment system to streamline payment inquiries and reduce manual intervention.
+  Unnamed: 6: Medium
+
+--- Row 46 ---
+
+--- Row 47 ---
+
+--- Row 48 ---
+
+--- Row 49 ---
+  Filterer agents output: Final Score at Lv2
+
+--- Row 50 ---
+  Filterer agents output: Lv2 Name
+  Unnamed: 1: Key Pain Points
+  Unnamed: 2: RAG Score (L2)
+  Unnamed: 3: RAG Score Reason
+  Unnamed: 4: Key Uplift Opportunity
+  Unnamed: 5: Confidence
+  Unnamed: 6: Additional Information
+
+--- Row 51 ---
+  Filterer agents output: 05.10 Purchasing/Payment Inquiries
+  Unnamed: 1: Limited self-service capabilities, system constraints, and multiple systems causing inefficiencies in purchase order and payment inquiries.
+  Unnamed: 2: Significant Challenges
+  Unnamed: 3: The presence of multiple high-impact pain points across Lv3 areas indicates significant challenges in operational efficiency.
+  Unnamed: 4: Implement integrated systems and enhance self-service capabilities to reduce inefficiencies and manual interventions.
+  Unnamed: 5: High
+  Unnamed: 6: Additional details on system integration and self-service capabilities would improve confidence.
+
+--- Row 52 ---
+
+--- Row 53 ---
+  Filterer agents output: UPDATED AFTER FEEDBACK
+
+--- Row 54 ---
+  Filterer agents output: Lv2 Name
+  Unnamed: 1: Key Pain Points
+  Unnamed: 2: RAG Score (L2)
+  Unnamed: 3: RAG Score Reason
+  Unnamed: 4: Key Uplift Opportunity
+  Unnamed: 5: Confidence
+  Unnamed: 6: Additional Information
+
+--- Row 55 ---
+  Filterer agents output: 05.10 Purchasing/Payment Inquiries
+  Unnamed: 1: Limited self-service capabilities, system constraints, and multiple systems causing inefficiencies in purchase order and payment inquiries.
+  Unnamed: 2: Significant Challenges
+  Unnamed: 3: The presence of multiple high-impact pain points across Lv3 areas indicates significant challenges in operational efficiency.
+  Unnamed: 4: Implement integrated systems and enhance self-service capabilities to reduce inefficiencies and manual interventions.
+  Unnamed: 5: Medium
+  Unnamed: 6: Additional details on system integration and self-service capabilities would improve confidence.
+
+====================================================================================================
+
+=== Sheet: output10 ===
+Shape: (70, 8)
+Columns: ['Filterer agents output', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7']
+
+--- Row 0 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Point Number
+  Unnamed: 3: Framework Pain Point
+  Unnamed: 4: Observed (Y/N)
+  Unnamed: 5: Client-Specific Expression
+  Unnamed: 6: Interview Quote
+  Unnamed: 7: Uplift Opportunity
+
+--- Row 1 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: 1
+  Unnamed: 3: There is currently no supplier self-service portal
+  Unnamed: 4: N
+
+--- Row 2 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries through self-service
+  Unnamed: 4: N
+
+--- Row 3 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: - There is limited capability to enable buyers to address their own inquiries into Purchase Requisitions through self-service
+  Unnamed: 4: N
+
+--- Row 4 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 2
+  Unnamed: 3: When Purchase Requisition inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+
+--- Row 5 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 3
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Orders through self-service
+  Unnamed: 4: N
+
+--- Row 6 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 4
+  Unnamed: 3: When Purchase Order inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+
+--- Row 7 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 5
+  Unnamed: 3: There are system constraints that prevent efficient resolution of Purchase Order inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The client's system constraints prevent efficient resolution of Purchase Order inquiries due to lack of integration between systems, requiring manual re-entry of supplier data, which leads to inefficiencies and potential errors.
+  Unnamed: 6: [ "So overseas payments take seem to take longer. And then for us to actually make the payment 'cause remember the the invoices and the. And the POS flow from? Flow from uni market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Unnamed: 7: Implement an integrated system to automate data transfer between UniMarket and Oracle AP, reducing manual data entry and errors.
+
+--- Row 8 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: 1
+  Unnamed: 3: Where payments are made from across multiple systems, it can be difficult to efficiently resolve payment inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The client's payment inquiries are difficult to resolve efficiently due to multiple systems handling payments without integration, leading to manual data re-entry and inefficiencies.
+  Unnamed: 6: [ "And then for us to actually make the payment 'cause remember the the invoices and the. And the POS flow from? Flow from uni market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Unnamed: 7: Rationalise the tech stack to create an end-to-end solution that eliminates the need for manual re-entry of data.
+
+--- Row 9 ---
+  Filterer agents output: Additional #
+  Unnamed: 1: Additional #
+  Unnamed: 2: Additional #
+  Unnamed: 3: Additional #
+  Unnamed: 4: Y
+  Unnamed: 5: The client experiences inefficiencies in the purchasing and payment inquiries process due to a lack of budget control in UniMarket, leading to potential overspending and financial discrepancies.
+  Unnamed: 6: [ "Also like you know, when you're raising requisition, there's no budget control in your new market. So the buyer's responsible for checking their budget is sufficient, which could be fine. You know, I don't know, budgetary control, et cetera, is definitely a way to go about it. But you know, maybe it's a policy thing, you know, you know, people going over their budget a lot. So. Yeah, there's a budgetary control issue there for us." ]
+  Unnamed: 7: Implement budget control mechanisms in UniMarket to ensure budget checks are performed before requisition approval.
+
+--- Row 10 ---
+
+--- Row 11 ---
+
+--- Row 12 ---
+  Filterer agents output: UPDATED AFTER FEEDBACK
+
+--- Row 13 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Pain Point Number
+  Unnamed: 3: Framework Pain Point
+  Unnamed: 4: Observed (Y/N)
+  Unnamed: 5: Client-Specific Expression
+  Unnamed: 6: Interview Quote
+  Unnamed: 7: Uplift Opportunity
+
+--- Row 14 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 2: 1
+  Unnamed: 3: There is currently no supplier self-service portal
+  Unnamed: 4: N
+
+--- Row 15 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries through self-service
+  Unnamed: 4: N
+
+--- Row 16 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 1
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Requisitions through self-service
+  Unnamed: 4: N
+
+--- Row 17 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 2
+  Unnamed: 3: When Purchase Requisition inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+
+--- Row 18 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 3
+  Unnamed: 3: There is limited capability to enable buyers to address their own inquiries into Purchase Orders through self-service
+  Unnamed: 4: N
+
+--- Row 19 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 4
+  Unnamed: 3: When Purchase Order inquiries cannot be addressed through self-service, there is no process or system enablement for central purchasing teams to manage inquiries
+  Unnamed: 4: N
+
+--- Row 20 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: 5
+  Unnamed: 3: There are system constraints that prevent efficient resolution of Purchase Order inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The client's system constraints prevent efficient resolution of Purchase Order inquiries due to lack of integration between systems, requiring manual re-entry of supplier data, which leads to inefficiencies and potential errors.
+  Unnamed: 6: [ "So overseas payments take seem to take longer. And then for us to actually make the payment 'cause remember the the invoices and the. And the POS flow from? Flow from uni market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Unnamed: 7: Implement an integrated system to automate data transfer between UniMarket and Oracle AP, reducing manual data entry and errors.
+
+--- Row 21 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: 1
+  Unnamed: 3: Where payments are made from across multiple systems, it can be difficult to efficiently resolve payment inquiries
+  Unnamed: 4: Y
+  Unnamed: 5: The client's payment inquiries are difficult to resolve efficiently due to multiple systems handling payments without integration, leading to manual data re-entry and inefficiencies.
+  Unnamed: 6: [ "And then for us to actually make the payment 'cause remember the the invoices and the. And the POS flow from? Flow from uni market into Oracle AP and then in Oracle AP we have to manually enter the supplies that we're going to pay or manually set up the supplies we're going to pay based on the uni market information because uni market and Oracle don't talk to each other relating to supply information so dual handling of data again." ]
+  Unnamed: 7: Rationalise the tech stack to create an end-to-end solution that eliminates the need for manual re-entry of data.
+
+--- Row 22 ---
+  Filterer agents output: Additional
+  Unnamed: 1: Additional
+  Unnamed: 2: Additional
+  Unnamed: 3: Additional
+  Unnamed: 4: Y
+  Unnamed: 5: The client experiences inefficiencies in the purchasing and payment inquiries process due to a lack of budget control in UniMarket, leading to potential overspending and financial discrepancies.
+  Unnamed: 6: [ "Also like you know, when you're raising requisition, there's no budget control in your new market. So the buyer's responsible for checking their budget is sufficient, which could be fine. You know, I don't know, budgetary control, et cetera, is definitely a way to go about it. But you know, maybe it's a policy thing, you know, you know, people going over their budget a lot. So. Yeah, there's a budgetary control issue there for us." ]
+  Unnamed: 7: Implement budget control mechanisms in UniMarket to ensure budget checks are performed before requisition approval.
+
+--- Row 23 ---
+
+--- Row 24 ---
+
+--- Row 25 ---
+  Filterer agents output: Final Score at Pain Point Level
+
+--- Row 26 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Key Pain Point
+  Unnamed: 2: RAG Score
+  Unnamed: 3: RAG Score Reason
+  Unnamed: 4: Uplift Opportunity
+
+--- Row 27 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+
+--- Row 28 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+
+--- Row 29 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: System constraints prevent efficient resolution of Purchase Order inquiries due to lack of integration between systems, requiring manual re-entry of supplier data, leading to inefficiencies and potential errors.
+  Unnamed: 2: High
+  Unnamed: 3: The system constraint is a core process issue causing significant disruption and persistent inefficiencies.
+  Unnamed: 4: Implement an integrated system to automate data transfer between UniMarket and Oracle AP, reducing manual data entry and errors.
+
+--- Row 30 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: Payment inquiries are difficult to resolve efficiently due to multiple systems handling payments without integration, leading to manual data re-entry and inefficiencies.
+  Unnamed: 2: High
+  Unnamed: 3: This is a core process issue causing significant disruption and persistent inefficiencies.
+  Unnamed: 4: Rationalise the tech stack to create an end-to-end solution that eliminates the need for manual re-entry of data.
+
+--- Row 31 ---
+  Filterer agents output: Additional #
+  Unnamed: 1: The client experiences inefficiencies in the purchasing and payment inquiries process due to a lack of budget control in UniMarket, leading to potential overspending and financial discrepancies.
+  Unnamed: 2: High
+  Unnamed: 3: This issue is core to financial management and causes significant disruption.
+  Unnamed: 4: Implement budget control mechanisms in UniMarket to ensure budget checks are performed before requisition approval.
+
+--- Row 32 ---
+
+--- Row 33 ---
+
+--- Row 34 ---
+  Filterer agents output: UPDATED AFTER FEEDBACK
+
+--- Row 35 ---
+  Filterer agents output: Final Score at Pain Point Level
+
+--- Row 36 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Key Pain Point
+  Unnamed: 2: RAG Score
+  Unnamed: 3: RAG Score Reason
+  Unnamed: 4: Uplift Opportunity
+
+--- Row 37 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+
+--- Row 38 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+
+--- Row 39 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: System constraints prevent efficient resolution of Purchase Order inquiries due to lack of integration between systems, requiring manual re-entry of supplier data, leading to inefficiencies and potential errors.
+  Unnamed: 2: High
+  Unnamed: 3: The system constraint is a core process issue causing significant disruption and persistent inefficiencies.
+  Unnamed: 4: Implement an integrated system to automate data transfer between UniMarket and Oracle AP, reducing manual data entry and errors.
+
+--- Row 40 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: Payment inquiries are difficult to resolve efficiently due to multiple systems handling payments without integration, leading to manual data re-entry and inefficiencies.
+  Unnamed: 2: High
+  Unnamed: 3: This is a core process issue causing significant disruption and persistent inefficiencies.
+  Unnamed: 4: Rationalise the tech stack to create an end-to-end solution that eliminates the need for manual re-entry of data.
+
+--- Row 41 ---
+
+--- Row 42 ---
+
+--- Row 43 ---
+  Filterer agents output: Final Score at Lv3
+
+--- Row 44 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Key Pain Points
+  Unnamed: 3: RAG Score (L3)
+  Unnamed: 4: RAG Score Reason
+  Unnamed: 5: Uplift Opportunity
+  Unnamed: 6: Confidence
+
+--- Row 45 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 3: No Challenges
+  Unnamed: 4: No observed pain points.
+  Unnamed: 6: High
+
+--- Row 46 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 3: No Challenges
+  Unnamed: 4: No observed pain points.
+  Unnamed: 6: High
+
+--- Row 47 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: System constraints prevent efficient resolution of Purchase Order inquiries due to lack of integration between systems, requiring manual re-entry of supplier data, leading to inefficiencies and potential errors.
+  Unnamed: 3: Significant Challenges
+  Unnamed: 4: The system constraint is a core process issue causing significant disruption and persistent inefficiencies.
+  Unnamed: 5: Implement an integrated system to automate data transfer between UniMarket and Oracle AP, reducing manual data entry and errors.
+  Unnamed: 6: High
+
+--- Row 48 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: Payment inquiries are difficult to resolve efficiently due to multiple systems handling payments without integration, leading to manual data re-entry and inefficiencies.
+  Unnamed: 3: Significant Challenges
+  Unnamed: 4: This is a core process issue causing significant disruption and persistent inefficiencies.
+  Unnamed: 5: Rationalise the tech stack to create an end-to-end solution that eliminates the need for manual re-entry of data.
+  Unnamed: 6: High
+
+--- Row 49 ---
+
+--- Row 50 ---
+
+--- Row 51 ---
+  Filterer agents output: UPDATED AFTER FEEDBACK
+
+--- Row 52 ---
+  Filterer agents output: Final Score at Lv3
+
+--- Row 53 ---
+  Filterer agents output: Lv3 Name
+  Unnamed: 1: Lv3 Description
+  Unnamed: 2: Key Pain Points
+  Unnamed: 3: RAG Score (L3)
+  Unnamed: 4: RAG Score Reason
+  Unnamed: 5: Uplift Opportunity
+  Unnamed: 6: Confidence
+
+--- Row 54 ---
+  Filterer agents output: 05.10.01 Manage Supplier Self-Service Portal
+  Unnamed: 1: The process for maintaining the supplier self-service portal and the information stored on it.
+  Unnamed: 4: No observed pain points.
+  Unnamed: 6: High
+
+--- Row 55 ---
+  Filterer agents output: 05.10.02 Support Requisition Inquiries
+  Unnamed: 1: The process for managing requisition queries both from suppliers (external) and business partners (internal).
+  Unnamed: 4: No observed pain points.
+  Unnamed: 6: High
+
+--- Row 56 ---
+  Filterer agents output: 05.10.03 Support Purchase Order Inquiries
+  Unnamed: 1: The process for managing purchase order queries both from suppliers (external) and business partners (internal).
+  Unnamed: 2: System constraints prevent efficient resolution of Purchase Order inquiries due to lack of integration between systems, requiring manual re-entry of supplier data, leading to inefficiencies and potential errors.
+  Unnamed: 3: Significant Challenges
+  Unnamed: 4: The system constraint is a core process issue causing significant disruption and persistent inefficiencies, but the confidence level is medium due to lack of clear quote alignment.
+  Unnamed: 5: Implement an integrated system to automate data transfer between UniMarket and Oracle AP, reducing manual data entry and errors.
+  Unnamed: 6: Medium
+
+--- Row 57 ---
+  Filterer agents output: 05.10.04 Manage Payment Inquiries & Exceptions
+  Unnamed: 1: The process for handling exceptions and the corrective action required to amend invoices. This process also includes capturing further data or contacting the supplier to close off the inquiry.
+  Unnamed: 2: Payment inquiries are difficult to resolve efficiently due to multiple systems handling payments without integration, leading to manual data re-entry and inefficiencies.
+  Unnamed: 3: Significant Challenges
+  Unnamed: 4: This is a core process issue causing significant disruption and persistent inefficiencies, but the confidence level is medium due to lack of clear quote alignment.
+  Unnamed: 5: Rationalise the tech stack to create an end-to-end solution that eliminates the need for manual re-entry of data.
+  Unnamed: 6: Medium
+
+--- Row 58 ---
+
+--- Row 59 ---
+
+--- Row 60 ---
+
+--- Row 61 ---
+  Filterer agents output: Final Score at Lv2
+
+--- Row 62 ---
+  Filterer agents output: Lv2 Name
+  Unnamed: 1: Key Pain Points
+  Unnamed: 2: RAG Score (L2)
+  Unnamed: 3: RAG Score Reason
+  Unnamed: 4: Key Uplift Opportunity
+  Unnamed: 5: Rationale
+  Unnamed: 6: Confidence
+  Unnamed: 7: Additional Information
+
+--- Row 63 ---
+  Filterer agents output: 05.10 Purchasing/Payment Inquiries
+  Unnamed: 1: The financial services department faces significant challenges in managing purchasing and payment inquiries due to system constraints and lack of integration between systems, leading to inefficiencies, manual data re-entry, and potential errors. The absence of budget control mechanisms in UniMarket further exacerbates these issues, posing risks of overspending and financial discrepancies.
+  Unnamed: 2: Significant Challenges
+  Unnamed: 3: The identified pain points are core process issues causing significant disruption and inefficiencies, with a clear need for system integration and budget control improvements.
+  Unnamed: 4: Implement an integrated system to automate data transfer, rationalise the tech stack for end-to-end solutions, and introduce budget control mechanisms.
+  Unnamed: 5: The scoring reflects the critical nature of the observed issues, which are central to the financial services operations and require urgent attention.
+  Unnamed: 6: High
+  Unnamed: 7: Yes, the observed pain points are clearly linked to the framework, providing confidence in the scoring assessments.
+
+--- Row 64 ---
+
+--- Row 65 ---
+
+--- Row 66 ---
+  Filterer agents output: UPDATED AFTER FEEDBACK
+
+--- Row 67 ---
+  Filterer agents output: Final Score at Lv2
+
+--- Row 68 ---
+  Filterer agents output: Lv2 Name
+  Unnamed: 1: Key Pain Points
+  Unnamed: 2: RAG Score (L2)
+  Unnamed: 3: RAG Score Reason
+  Unnamed: 4: Key Uplift Opportunity
+  Unnamed: 5: Rationale
+  Unnamed: 6: Confidence
+  Unnamed: 7: Additional Information
+
+--- Row 69 ---
+  Filterer agents output: 05.10 Purchasing/Payment Inquiries
+  Unnamed: 1: The financial services department faces significant challenges in managing purchasing and payment inquiries due to system constraints and lack of integration between systems, leading to inefficiencies, manual data re-entry, and potential errors.
+  Unnamed: 2: Significant Challenges
+  Unnamed: 3: The identified pain points are core process issues causing significant disruption and inefficiencies, with a clear need for system integration improvements.
+  Unnamed: 4: Implement an integrated system to automate data transfer and rationalise the tech stack for end-to-end solutions.
+  Unnamed: 5: The scoring reflects the critical nature of the observed issues, which are central to the financial services operations and require urgent attention.
+  Unnamed: 6: Medium
+  Unnamed: 7: No, due to medium confidence levels and additional pain points not being framework-related.
+
+====================================================================================================
+

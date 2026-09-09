@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Client Pain Point Analysis — Vertical Workflow</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #f7f8fa;
+    color: #1f2937;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  header {
+    padding: 24px 32px 8px;
+  }
+  h1 {
+    margin: 0 0 4px;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  .sub {
+    color: #6b7280;
+    font-size: 13px;
+  }
+  .sub code {
+    background: #e5e7eb;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  .wrap {
+    padding: 24px 32px 40px;
+    display: flex;
+    justify-content: center;
+  }
+  .mermaid {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 24px;
+  }
+  footer {
+    padding: 16px 32px 32px;
+    font-size: 12px;
+    color: #6b7280;
+    border-top: 1px solid #e5e7eb;
+  }
+  footer code {
+    background: #e5e7eb;
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Workflow 1 — Client Pain Point Analysis</h1>
+  <div class="sub">
+    Vertical view (top-down). Source of truth:
+    <code>workflow/definition/workflow-final.yaml</code>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="mermaid">
+flowchart TD
+    Start([User submits transcript]) --> S1[Supervisor<br/>initial orchestration]
+    S1 --> P1[Preparer<br/>initial pain point analysis]
+    P1 --> Init["Set TurnCount = 0"]
+    Init --> R[Reviewer<br/>validates analysis]
+    R --> Cond{TurnCount &ge; 2<br/>OR<br/>ends with 'APPROVED'?}
+    Cond -- No --> Inc["TurnCount += 1"]
+    Inc --> P2[Preparer<br/>redo]
+    P2 --> R
+    Cond -- Yes --> P3[Preparer<br/>final pass]
+    P3 --> S2[Supervisor<br/>final review]
+    S2 --> HITL{{Human-in-the-loop:<br/>'Is this acceptable?'}}
+    HITL --> F[Formatter<br/>convert to JSON schema]
+    F --> End([End conversation])
+  </div>
+</div>
+
+<footer>
+  Diagram mirrors the Mermaid flowchart in <code>README.md</code>, rendered top-down.
+  Derived from <code>workflow/definition/workflow-final.yaml</code> (last updated 2026-04-30).
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    flowchart: {
+      curve: 'basis',
+      nodeSpacing: 50,
+      rankSpacing: 60,
+      htmlLabels: true
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Pain Point Analysis Output",
+  "type": "object",
+  "required": ["pain_points"],
+  "properties": {
+    "pain_points": {
+      "type": "array",
+      "description": "List of assessed pain points from the framework",
+      "items": {
+        "type": "object",
+        "required": ["number", "pain_point", "observed", "score_status", "verbatim_quotes"],
+        "properties": {
+          "number": {
+            "type": "integer",
+            "description": "Pain point number from the framework (1-20)"
+          },
+          "pain_point": {
+            "type": "string",
+            "description": "The pain point statement from the framework"
+          },
+          "observed": {
+            "type": "string",
+            "enum": ["Y", "N"],
+            "description": "Whether the pain point was observed in the transcript"
+          },
+          "score_status": {
+            "type": "string",
+            "enum": ["N/A", "Medium", "High"],
+            "description": "N/A if not observed, Medium if observed, High if observed and causes disruption"
+          },
+          "verbatim_quotes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Exact quotes from transcript supporting this pain point. Empty array if not observed."
+          }
+        }
+      }
+    }
+  }
+}

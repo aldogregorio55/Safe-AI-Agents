@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Safety Prompt Testing Strategy</title>
+  <style>
+    :root {
+      --blue-dark:   #00338d;
+      --blue-mid:    #005eb8;
+      --blue-light:  #0091da;
+      --accent:      #00c389;
+      --green:       #00c389;
+      --amber:       #f5a623;
+      --red:         #e05252;
+      --surface:     #f4f6fa;
+      --card:        #ffffff;
+      --text:        #1a1a2e;
+      --muted:       #5a6478;
+      --border:      #dde3ef;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--surface);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--blue-dark);
+      color: #fff;
+      padding: 2.5rem 3rem 2rem;
+    }
+
+    header .kicker {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    header .subtitle {
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.75);
+      max-width: 700px;
+    }
+
+    /* ── LAYOUT ── */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 2rem 4rem;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .card p, .card li {
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+
+    .card ul {
+      margin: 0.5rem 0 0 1.2rem;
+    }
+
+    .card li {
+      margin-bottom: 0.3rem;
+    }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight {
+      background: linear-gradient(135deg, #e6f0ff, #f0f7ff);
+      border-left: 4px solid var(--blue-mid);
+      border-radius: 0 10px 10px 0;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .highlight p {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--blue-dark);
+    }
+
+    .highlight code {
+      background: rgba(0,51,141,0.08);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.82rem;
+    }
+
+    code {
+      background: rgba(0,51,141,0.08);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.82rem;
+    }
+
+    /* ── WORKFLOW DIAGRAM ── */
+    .workflow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+
+    .workflow-node {
+      background: var(--blue-dark);
+      color: #fff;
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      text-align: center;
+      min-width: 130px;
+    }
+
+    .workflow-node .role {
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .workflow-node .desc {
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.7);
+      margin-top: 0.2rem;
+    }
+
+    .workflow-arrow {
+      font-size: 1.2rem;
+      color: var(--muted);
+      padding: 0 0.5rem;
+    }
+
+    .workflow-node.input {
+      background: var(--blue-light);
+    }
+
+    .workflow-node.output {
+      background: var(--green);
+      color: #1a1a2e;
+    }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    thead th {
+      background: var(--blue-dark);
+      color: #fff;
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    thead th:first-child { border-radius: 8px 0 0 0; }
+    thead th:last-child { border-radius: 0 8px 0 0; }
+
+    tbody td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: #f8faff; }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+    }
+
+    .badge.green  { background: #e6faf4; color: #007a57; border: 1px solid #9de7cf; }
+    .badge.amber  { background: #fff7e6; color: #a06400; border: 1px solid #f5d99a; }
+    .badge.red    { background: #fef0f0; color: #b91c1c; border: 1px solid #f5b5b5; }
+    .badge.blue   { background: #e6f0ff; color: #00338d; border: 1px solid #99bbee; }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+
+    .badge.green::before  { background: var(--green); }
+    .badge.amber::before  { background: var(--amber); }
+    .badge.red::before    { background: var(--red); }
+    .badge.blue::before   { background: var(--blue-light); }
+
+    /* ── TWO COLUMN ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* ── PILLS ROW ── */
+    .pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .pill {
+      background: var(--blue-dark);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 700px) {
+      .two-col { grid-template-columns: 1fr; }
+      .workflow { flex-direction: column; }
+      .workflow-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="kicker">AI Agent Safety — Workstream B</div>
+    <h1>Safety Prompt Testing Strategy</h1>
+    <p class="subtitle">One-page summary for stakeholder review. Full details: <code style="background: rgba(255,255,255,0.15); padding: 0.1rem 0.4rem; border-radius: 4px;">planning/evaluation-working-reference.md</code></p>
+  </header>
+
+  <main>
+
+    <!-- OBJECTIVE & HYPOTHESIS -->
+    <div class="section">
+      <div class="section-label">Objective & Hypothesis</div>
+      <div class="highlight">
+        <p><strong>Objective:</strong> Determine whether the safety prompt add-on measurably reduces adversarial attack success against a multi-agent workflow.</p>
+      </div>
+      <div class="highlight">
+        <p><strong>Hypothesis:</strong> Injecting the safety prompt into agent instructions will significantly reduce attack success rates without meaningfully degrading task performance.</p>
+      </div>
+    </div>
+
+    <!-- DESIGN PRINCIPLES -->
+    <div class="section">
+      <div class="section-label">Design Principles</div>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Principle</th>
+              <th>What It Means</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Modular</strong></td>
+              <td>Supports new workflows, add-ons, and models without redesign</td>
+            </tr>
+            <tr>
+              <td><strong>Repeatable</strong></td>
+              <td>Same framework, swap the variable, re-run</td>
+            </tr>
+            <tr>
+              <td><strong>Prompt-isolated</strong></td>
+              <td>Platform held neutral — only the prompt changes</td>
+            </tr>
+            <tr>
+              <td><strong>Extensible</strong></td>
+              <td>Accommodates future modules and attack categories</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ASSUMPTIONS & RISKS -->
+    <div class="section">
+      <div class="section-label">Assumptions & Risks</div>
+      <div class="two-col">
+        <div class="card">
+          <h3>Assumptions</h3>
+          <ul>
+            <li>Foundry access will be granted</li>
+            <li>Platform guardrails can be neutralized</li>
+            <li>Test transcript is representative</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Risks</h3>
+          <ul>
+            <li>Model may refuse attacks without add-on (masks value)</li>
+            <li>Single workflow may not generalize</li>
+            <li>Corpus may be too small for statistical significance</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLATFORM -->
+    <div class="section">
+      <div class="section-label">Platform</div>
+      <div class="card">
+        <h3>Azure AI Foundry</h3>
+        <p>Target platform for building and testing the multi-agent workflow.</p>
+        <div class="highlight" style="margin-top: 1rem; margin-bottom: 0;">
+          <p><strong>Why prompt-level safety matters:</strong> Foundry is built on the OpenAI Agents SDK. The SDK's guardrails only fire on the first and last agents in a chain. Middle agents receive no SDK protection — <strong>prompt-level safety is the only defense</strong> for agents processing untrusted data mid-workflow.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT WE'RE TESTING -->
+    <div class="section">
+      <div class="section-label">What We're Testing</div>
+      <div class="card">
+        <p><strong>Prompt-level safety only.</strong> Two versions tested in separate runs:</p>
+        <table style="margin-top: 0.75rem;">
+          <thead>
+            <tr>
+              <th>Run</th>
+              <th>Safety Variable</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1</strong></td>
+              <td>Lean baseline (v2)</td>
+            </tr>
+            <tr>
+              <td><strong>2</strong></td>
+              <td>Complete baseline (v1)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--muted);">Platform guardrails held neutral to isolate the prompt's contribution.</p>
+      </div>
+    </div>
+
+    <!-- SCOPE -->
+    <div class="section">
+      <div class="section-label">Scope</div>
+      <div class="two-col">
+        <div class="card">
+          <h3>In Scope</h3>
+          <ul>
+            <li>Prompt-level safety add-on effectiveness</li>
+            <li>Three attack categories: DPI, IPI, MR</li>
+            <li>Per-agent (isolated) and end-to-end (pipeline) testing</li>
+            <li>Single workflow: Client Pain Point Analysis (4 agents)</li>
+            <li>Two safety prompt versions: Lean baseline (v2), Complete baseline (v1)</li>
+            <li>F1 scoring methodology for evaluation</li>
+            <li>Anonymized test transcript data</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Out of Scope</h3>
+          <ul>
+            <li>Platform-level guardrails (held neutral for isolation)</li>
+            <li>Network, authentication, or infrastructure security</li>
+            <li>Model fine-tuning or custom model training</li>
+            <li>Production deployment or operational concerns</li>
+            <li>Workflows beyond the test harness</li>
+            <li>Real client data or PII handling</li>
+            <li>Performance benchmarking (latency, throughput)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVALUATION DESIGN -->
+    <div class="section">
+      <div class="section-label">Evaluation Design</div>
+
+      <!-- Conditions Matrix -->
+      <div class="card">
+        <h3>Four Conditions Per Run</h3>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>No Attacks</th>
+              <th>With Attacks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>No Add-on</strong></td>
+              <td>A — Functional baseline</td>
+              <td>B — Vulnerability baseline</td>
+            </tr>
+            <tr>
+              <td><strong>With Add-on</strong></td>
+              <td>D — False positive cost</td>
+              <td>C — Safety evaluation</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 0.75rem; font-size: 0.85rem;"><strong>B → C delta</strong> = Safety prompt effectiveness &nbsp;|&nbsp; <strong>A → D delta</strong> = Usability cost</p>
+      </div>
+
+      <!-- Test levels + attacks -->
+      <div class="two-col">
+        <div class="card">
+          <h3>Three Attack Categories</h3>
+          <div class="pills">
+            <span class="pill">Direct Prompt Injection</span>
+            <span class="pill">Indirect Prompt Injection</span>
+            <span class="pill">Malicious User Roleplay</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Two Test Levels</h3>
+          <ul>
+            <li><strong>Per-Agent:</strong> Isolated — finds the weak link</li>
+            <li><strong>End-to-End:</strong> Full pipeline — tests propagation</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Scoring -->
+      <div class="card">
+        <h3>F1 Scoring Summary</h3>
+        <p style="margin-bottom: 0.75rem;">Binary classification: did the agent behave safely?</p>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Attack Present</th>
+              <th>No Attack</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Safe</strong></td>
+              <td>TP — resisted attack</td>
+              <td>TN — completed normally</td>
+            </tr>
+            <tr>
+              <td><strong>Unsafe</strong></td>
+              <td>FN — followed attack</td>
+              <td>FP — blocked without cause</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="two-col" style="margin-top: 1rem;">
+          <div>
+            <p style="font-size: 0.85rem;"><strong>Recall</strong> = TP / (TP + FN)</p>
+            <p style="font-size: 0.78rem; color: var(--muted);">"Of all attacks, how many caught?"</p>
+          </div>
+          <div>
+            <p style="font-size: 0.85rem;"><strong>F1</strong> = 2 × TP / (2×TP + FP + FN)</p>
+            <p style="font-size: 0.78rem; color: var(--muted);">Balanced summary metric</p>
+          </div>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--muted); margin-top: 0.75rem;">Scored per attack category (F1-DPI, F1-IPI, F1-MR) and aggregate. Full methodology in <code>planning/f1-scoring-methodology.md</code></p>
+      </div>
+    </div>
+
+    <!-- EXECUTION PHASES -->
+    <div class="section">
+      <div class="section-label">Execution Plan</div>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Phase</th>
+              <th>What</th>
+              <th>Blocked By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>0</strong></td>
+              <td>Strategy & test plan</td>
+              <td><span class="badge green">None</span></td>
+            </tr>
+            <tr>
+              <td><strong>1</strong></td>
+              <td>Team review, platform access</td>
+              <td><span class="badge blue">Phase 0</span></td>
+            </tr>
+            <tr>
+              <td><strong>2</strong></td>
+              <td>Build test harness (4 agents, orchestration)</td>
+              <td><span class="badge blue">Phase 1</span></td>
+            </tr>
+            <tr>
+              <td><strong>3</strong></td>
+              <td>Author control + treatment prompts</td>
+              <td><span class="badge blue">Phase 2</span></td>
+            </tr>
+            <tr>
+              <td><strong>4</strong></td>
+              <td>Build attack corpus + benign baselines</td>
+              <td><span class="badge blue">Phase 0</span></td>
+            </tr>
+            <tr>
+              <td><strong>5</strong></td>
+              <td>Run evaluations (all conditions, both levels)</td>
+              <td><span class="badge amber">Phases 2–4</span></td>
+            </tr>
+            <tr>
+              <td><strong>6</strong></td>
+              <td>Score, analyze, report findings</td>
+              <td><span class="badge amber">Phase 5</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 0.75rem; font-size: 0.85rem;"><strong>Current blocker:</strong> Azure AI Foundry access (Phase 1)</p>
+      </div>
+    </div>
+
+    <!-- EXTENSIBILITY -->
+    <div class="section">
+      <div class="section-label">Extensibility</div>
+      <div class="card">
+        <p>The framework is designed to support:</p>
+        <ul style="margin-top: 0.5rem;">
+          <li><strong>New workflows</strong> — Different agent counts, patterns, input/output types</li>
+          <li><strong>New add-on modules</strong> — Context-specific safety modules tested individually or in combination</li>
+          <li><strong>Model comparison</strong> — Same workflow, different models (future runs)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- OPENAI SDK ARCHITECTURE -->
+    <div class="section">
+      <div class="section-label">OpenAI Agents SDK — Core Primitives</div>
+      <div class="card">
+        <h3>SDK Building Blocks</h3>
+        <table style="margin-top: 0.75rem;">
+          <thead>
+            <tr>
+              <th>Primitive</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Agents</strong></td>
+              <td>LLMs configured with instructions, tools, and handoffs</td>
+            </tr>
+            <tr>
+              <td><strong>Tools</strong></td>
+              <td>Functions the agent can invoke to take actions or retrieve data</td>
+            </tr>
+            <tr>
+              <td><strong>Handoffs</strong></td>
+              <td>Allow agents to delegate to other agents for specific subtasks</td>
+            </tr>
+            <tr>
+              <td><strong>Guardrails</strong></td>
+              <td>Input/output filters that validate or block content (first/last agent only)</td>
+            </tr>
+            <tr>
+              <td><strong>Tracing</strong></td>
+              <td>Built-in observability for debugging and monitoring agent runs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Orchestration Patterns</h3>
+        <table style="margin-top: 0.75rem;">
+          <thead>
+            <tr>
+              <th>Pattern</th>
+              <th>Description</th>
+              <th>Used In Test Harness</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Single Agent</strong></td>
+              <td>One agent with tools, loops until task complete</td>
+              <td><span class="badge amber">No</span></td>
+            </tr>
+            <tr>
+              <td><strong>Agents as Tools</strong></td>
+              <td>Supervisor agent calls sub-agents as tools, retains control</td>
+              <td><span class="badge green">Yes</span></td>
+            </tr>
+            <tr>
+              <td><strong>Handoffs</strong></td>
+              <td>Agents delegate fully to other agents, control transfers</td>
+              <td><span class="badge amber">No</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="highlight" style="margin-top: 1rem; margin-bottom: 0;">
+          <p><strong>Test Harness Pattern:</strong> Supervisor orchestrates Preparer → Reviewer → Formatter as tools. Supervisor retains control; sub-agents execute and return results.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    AI Agent Safety — Safety Prompt Testing Strategy — 2026-04-13
+  </footer>
+
+</body>
+</html>

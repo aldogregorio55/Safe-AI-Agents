@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Pain Point Analysis Output",
+  "type": "object",
+  "required": ["lv2_summary", "lv3_scores", "pain_point_details"],
+  "properties": {
+    "lv2_summary": {
+      "type": "object",
+      "required": ["lv2_id", "lv2_name", "key_pain_points", "rag_score", "rag_score_calculation", "key_uplift_opportunity", "confidence", "additional_information_required"],
+      "properties": {
+        "lv2_id": {
+          "type": "string",
+          "description": "Level 2 identifier (e.g., '05.10')"
+        },
+        "lv2_name": {
+          "type": "string",
+          "description": "Level 2 name (e.g., 'Purchasing/Payment Inquiries')"
+        },
+        "key_pain_points": {
+          "type": "string",
+          "description": "Summary of key pain points observed"
+        },
+        "rag_score": {
+          "type": "string",
+          "enum": ["No Challenges", "Some Challenges", "Significant Challenges"]
+        },
+        "rag_score_calculation": {
+          "type": "string",
+          "description": "Explanation of how the RAG score was derived"
+        },
+        "key_uplift_opportunity": {
+          "type": "string",
+          "description": "Primary improvement opportunity"
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["High", "Medium", "Low"]
+        },
+        "additional_information_required": {
+          "type": ["string", "null"],
+          "description": "Any gaps or additional information needed"
+        }
+      }
+    },
+    "lv3_scores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["lv3_id", "lv3_name", "lv3_description", "pain_points_summary", "rag_score", "rag_score_calculation", "uplift_opportunity", "confidence"],
+        "properties": {
+          "lv3_id": {
+            "type": "string",
+            "description": "Level 3 identifier (e.g., '05.10.01')"
+          },
+          "lv3_name": {
+            "type": "string",
+            "description": "Level 3 name"
+          },
+          "lv3_description": {
+            "type": "string",
+            "description": "Level 3 process description"
+          },
+          "pain_points_summary": {
+            "type": "string",
+            "description": "Summary of pain points for this Lv3"
+          },
+          "rag_score": {
+            "type": "string",
+            "enum": ["No Challenges", "Some Challenges", "Significant Challenges"]
+          },
+          "rag_score_calculation": {
+            "type": "string",
+            "description": "Explanation of how the RAG score was derived"
+          },
+          "uplift_opportunity": {
+            "type": "string",
+            "description": "Improvement opportunity for this Lv3"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["High", "Medium", "Low"]
+          }
+        }
+      }
+    },
+    "pain_point_details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["lv3_id", "lv3_name", "pain_point_number", "pain_point", "is_additional", "observed", "verbatim_quotes", "client_specific_expression", "scoring", "rag_score", "rag_score_calculation", "uplift_opportunity"],
+        "properties": {
+          "lv3_id": {
+            "type": "string"
+          },
+          "lv3_name": {
+            "type": "string"
+          },
+          "pain_point_number": {
+            "type": "integer"
+          },
+          "pain_point": {
+            "type": "string",
+            "description": "The pain point description"
+          },
+          "is_additional": {
+            "type": "boolean",
+            "description": "True if this is an additional pain point (not predefined)"
+          },
+          "observed": {
+            "type": "string",
+            "enum": ["Y", "N"]
+          },
+          "verbatim_quotes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Exact quotes from transcript supporting this pain point"
+          },
+          "client_specific_expression": {
+            "type": ["string", "null"],
+            "description": "How the client specifically described this pain point"
+          },
+          "scoring": {
+            "type": "object",
+            "required": ["relevance", "urgency", "frequency", "opportunity"],
+            "properties": {
+              "relevance": {
+                "type": "string",
+                "enum": ["Medium", "High", "N/A"]
+              },
+              "urgency": {
+                "type": "string",
+                "enum": ["Medium", "High", "N/A"]
+              },
+              "frequency": {
+                "type": "string",
+                "enum": ["Medium", "High", "N/A"]
+              },
+              "opportunity": {
+                "type": "string",
+                "enum": ["Medium", "High", "N/A"]
+              }
+            }
+          },
+          "rag_score": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High", "N/A"]
+          },
+          "rag_score_calculation": {
+            "type": "string",
+            "description": "Explanation of how the RAG score was derived"
+          },
+          "uplift_opportunity": {
+            "type": ["string", "null"],
+            "description": "Specific improvement opportunity for this pain point"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,132 @@
+# safe-agents — Final Working Workflow YAML
+# Last updated: 2026-04-30
+#
+# WORKFLOW SUMMARY
+# ----------------
+# 1. Supervisor receives user transcript → saves to Local.LatestMessage
+# 2. Preparer produces pain point analysis → saves to Local.LatestMessage
+# 3. SetVariable: Local.TurnCount = 0 (counts Reviewer passes, not Preparer passes)
+# 4. Reviewer validates analysis → saves to Local.LatestMessage (Table type)
+# 5. SetVariable: Local.ReviewerResponse = Last(Local.LatestMessage).Text
+#    — CRITICAL: extracts Reviewer's last message as String from the Table
+# 6. ConditionGroup (If/Else):
+#    — YES if: TurnCount >= 2 (force approve after 2 reviews) OR ReviewerResponse ends with "APPROVED"
+#    — YES branch: Preparer (final pass) → Supervisor review → HITL question → Formatter → End
+#    — NO branch: TurnCount + 1 → Preparer redo → GoTo reviewer_agent (loop)
+#
+# KEY LESSONS
+# -----------
+# - Agent output saved via "messages" is a TABLE type (conversation history), not a String
+# - EndsWith/Find/etc. require a String — cannot be used directly on Local.LatestMessage
+# - Solution: SetVariable node after Reviewer using Last(Local.LatestMessage).Text to extract String
+# - Power Fx in Foundry: use Or() not ||, use commas not semicolons, no ! operator (use Not())
+# - Dot notation deprecated for Table columns — only valid on ParseJSON untyped objects
+# - TurnCount starts at 0 (set before first Reviewer call) so >= 2 allows 2 genuine review attempts
+
+kind: workflow
+trigger:
+  kind: OnConversationStart
+  id: trigger_wf
+  actions:
+    - kind: InvokeAzureAgent
+      id: supervisor_agent
+      description: The student node
+      conversationId: =System.ConversationId
+      agent:
+        name: Supervisor
+      input:
+        messages: =Local.LatestMessage
+      output:
+        messages: Local.LatestMessage
+        autoSend: true
+        responseObject: Local.LatestMessage
+    - kind: InvokeAzureAgent
+      id: preparer_agent
+      description: The teacher node
+      conversationId: =System.ConversationId
+      agent:
+        name: PreparerAgent
+      input:
+        messages: =Local.LatestMessage
+      output:
+        messages: Local.LatestMessage
+        autoSend: true
+    - kind: SetVariable
+      id: set_variable_turncount
+      variable: Local.TurnCount
+      value: =0
+    - kind: InvokeAzureAgent
+      id: reviewer_agent
+      agent:
+        name: Reviewer
+      conversationId: =System.ConversationId
+      input:
+        messages: =Local.LatestMessage
+      output:
+        autoSend: true
+        messages: Local.LatestMessage
+        responseObject: Local.LatestMessage
+    - kind: SetVariable
+      id: set_reviewer_response
+      variable: Local.ReviewerResponse
+      value: =Last(Local.LatestMessage).Text
+    - kind: ConditionGroup
+      conditions:
+        - condition: =Or(Local.TurnCount >= 2, EndsWith(Local.ReviewerResponse, "APPROVED"))
+          actions:
+            - kind: InvokeAzureAgent
+              id: preparer_reviewed
+              agent:
+                name: PreparerAgent
+              conversationId: =System.ConversationId
+              input:
+                messages: =Local.LatestMessage
+              output:
+                autoSend: true
+          id: If-Then
+      id: node-1777525298524
+      elseActions:
+        - kind: SetVariable
+          id: node-1777525305638
+          variable: Local.TurnCount
+          value: =Local.TurnCount + 1
+        - kind: InvokeAzureAgent
+          id: preparer_redo
+          agent:
+            name: PreparerAgent
+          conversationId: =System.ConversationId
+          input:
+            messages: =Local.LatestMessage
+          output:
+            autoSend: true
+        - kind: GotoAction
+          actionId: reviewer_agent
+          id: node-1777525366772
+    - kind: InvokeAzureAgent
+      id: supervisor_review
+      agent:
+        name: Supervisor
+      conversationId: =System.ConversationId
+      input:
+        messages: =Local.LatestMessage
+      output:
+        autoSend: true
+    - kind: Question
+      variable: Local.UserApproval
+      id: node-1777524890260
+      entity: StringPrebuiltEntity
+      prompt: Is this acceptable?
+    - kind: InvokeAzureAgent
+      id: Formatter
+      agent:
+        name: Formatter
+      conversationId: =System.ConversationId
+      input:
+        messages: =Local.LatestMessage
+      output:
+        autoSend: true
+    - kind: EndConversation
+      id: node-1777524976770
+id: ""
+name: safe-agents
+description: ""
